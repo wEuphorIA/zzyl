@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.NursingProjectMapper">
+    
+    <resultMap type="NursingProject" id="NursingProjectResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="unit"    column="unit"    />
+        <result property="price"    column="price"    />
+        <result property="image"    column="image"    />
+        <result property="nursingRequirement"    column="nursing_requirement"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNursingProjectVo">
+        select id, name, order_no, unit, price, image, nursing_requirement, status, create_by, update_by, remark, create_time, update_time from nursing_project
+    </sql>
+
+    <select id="selectNursingProjectList" parameterType="NursingProject" resultMap="NursingProjectResult">
+        <include refid="selectNursingProjectVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectNursingProjectById" parameterType="Long" resultMap="NursingProjectResult">
+        <include refid="selectNursingProjectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNursingProject" parameterType="NursingProject" useGeneratedKeys="true" keyProperty="id">
+        insert into nursing_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="unit != null">unit,</if>
+            <if test="price != null">price,</if>
+            <if test="image != null and image != ''">image,</if>
+            <if test="nursingRequirement != null and nursingRequirement != ''">nursing_requirement,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="price != null">#{price},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="nursingRequirement != null and nursingRequirement != ''">#{nursingRequirement},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNursingProject" parameterType="NursingProject">
+        update nursing_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="nursingRequirement != null and nursingRequirement != ''">nursing_requirement = #{nursingRequirement},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNursingProjectById" parameterType="Long">
+        delete from nursing_project where id = #{id}
+    </delete>
+
+    <delete id="deleteNursingProjectByIds" parameterType="String">
+        delete from nursing_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
