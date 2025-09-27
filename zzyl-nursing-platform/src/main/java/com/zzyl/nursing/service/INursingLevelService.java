@@ -1,19 +1,20 @@
 package com.zzyl.nursing.service;
 
 import java.util.List;
-import com.zzyl.nursing.domain.NursingLevel;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.domain .NursingLevel;
 
 /**
  * 护理等级Service接口
- * 
+ *
  * @author Euphoria
  * @date 2025-09-27
  */
-public interface INursingLevelService 
-{
+public interface INursingLevelService extends IService<NursingLevel> {
     /**
      * 查询护理等级
-     * 
+     *
      * @param id 护理等级主键
      * @return 护理等级
      */
@@ -21,7 +22,7 @@ public interface INursingLevelService
 
     /**
      * 查询护理等级列表
-     * 
+     *
      * @param nursingLevel 护理等级
      * @return 护理等级集合
      */
@@ -29,7 +30,7 @@ public interface INursingLevelService
 
     /**
      * 新增护理等级
-     * 
+     *
      * @param nursingLevel 护理等级
      * @return 结果
      */
@@ -37,7 +38,7 @@ public interface INursingLevelService
 
     /**
      * 修改护理等级
-     * 
+     *
      * @param nursingLevel 护理等级
      * @return 结果
      */
@@ -45,7 +46,7 @@ public interface INursingLevelService
 
     /**
      * 批量删除护理等级
-     * 
+     *
      * @param ids 需要删除的护理等级主键集合
      * @return 结果
      */
@@ -53,7 +54,7 @@ public interface INursingLevelService
 
     /**
      * 删除护理等级信息
-     * 
+     *
      * @param id 护理等级主键
      * @return 结果
      */

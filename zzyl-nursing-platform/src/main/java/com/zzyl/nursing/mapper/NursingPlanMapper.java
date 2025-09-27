@@ -1,19 +1,20 @@
 package com.zzyl.nursing.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zzyl.nursing.domain.NursingPlan;
 
 /**
  * 护理计划Mapper接口
- * 
+ *
  * @author Euphoria
  * @date 2025-09-27
  */
-public interface NursingPlanMapper 
-{
+public interface NursingPlanMapper extends BaseMapper<NursingPlan> {
     /**
      * 查询护理计划
-     * 
+     *
      * @param id 护理计划主键
      * @return 护理计划
      */
@@ -21,7 +22,7 @@ public interface NursingPlanMapper
 
     /**
      * 查询护理计划列表
-     * 
+     *
      * @param nursingPlan 护理计划
      * @return 护理计划集合
      */
@@ -29,7 +30,7 @@ public interface NursingPlanMapper
 
     /**
      * 新增护理计划
-     * 
+     *
      * @param nursingPlan 护理计划
      * @return 结果
      */
@@ -37,7 +38,7 @@ public interface NursingPlanMapper
 
     /**
      * 修改护理计划
-     * 
+     *
      * @param nursingPlan 护理计划
      * @return 结果
      */
@@ -45,7 +46,7 @@ public interface NursingPlanMapper
 
     /**
      * 删除护理计划
-     * 
+     *
      * @param id 护理计划主键
      * @return 结果
      */
@@ -53,7 +54,7 @@ public interface NursingPlanMapper
 
     /**
      * 批量删除护理计划
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
