@@ -1,6 +1,10 @@
 package com.zzyl.nursing.domain;
 
 import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.zzyl.common.annotation.Excel;
@@ -16,6 +20,9 @@ import io.swagger.annotations.ApiModelProperty;
  * @date 2025-09-26
  */
 @ApiModel("护理项目")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NursingProject extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -59,102 +66,4 @@ public class NursingProject extends BaseEntity
     @ApiModelProperty("状态（0：禁用，1：启用）")
     private Integer status;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-
-    public void setOrderNo(Integer orderNo) 
-    {
-        this.orderNo = orderNo;
-    }
-
-    public Integer getOrderNo() 
-    {
-        return orderNo;
-    }
-
-    public void setUnit(String unit) 
-    {
-        this.unit = unit;
-    }
-
-    public String getUnit() 
-    {
-        return unit;
-    }
-
-    public void setPrice(BigDecimal price) 
-    {
-        this.price = price;
-    }
-
-    public BigDecimal getPrice() 
-    {
-        return price;
-    }
-
-    public void setImage(String image) 
-    {
-        this.image = image;
-    }
-
-    public String getImage() 
-    {
-        return image;
-    }
-
-    public void setNursingRequirement(String nursingRequirement) 
-    {
-        this.nursingRequirement = nursingRequirement;
-    }
-
-    public String getNursingRequirement() 
-    {
-        return nursingRequirement;
-    }
-
-    public void setStatus(Integer status) 
-    {
-        this.status = status;
-    }
-
-    public Integer getStatus() 
-    {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("orderNo", getOrderNo())
-            .append("unit", getUnit())
-            .append("price", getPrice())
-            .append("image", getImage())
-            .append("nursingRequirement", getNursingRequirement())
-            .append("status", getStatus())
-            .append("createBy", getCreateBy())
-            .append("updateBy", getUpdateBy())
-            .append("remark", getRemark())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .toString();
-    }
 }
