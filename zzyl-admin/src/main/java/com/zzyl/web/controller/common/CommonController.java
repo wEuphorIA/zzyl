@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zzyl.AliyunOSSOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class CommonController
     private ServerConfig serverConfig;
 
     private static final String FILE_DELIMETER = ",";
+
+    @Autowired
+    private AliyunOSSOperator aliyunOSSOperator;
 
     /**
      * 通用下载请求
@@ -77,14 +82,17 @@ public class CommonController
         try
         {
             // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
+            // String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+            // String fileName = FileUploadUtils.upload(filePath, file);
+
+            String url = aliyunOSSOperator.upload(file.getBytes(), file.getOriginalFilename());
+
+            // String url = serverConfig.getUrl() + fileName;
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
-            ajax.put("fileName", fileName);
-            ajax.put("newFileName", FileUtils.getName(fileName));
+            ajax.put("fileName", url);
+            ajax.put("newFileName", FileUtils.getName(url));
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
         }

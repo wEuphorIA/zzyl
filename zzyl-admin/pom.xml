@@ -17,6 +17,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.zzyl</groupId>
+            <artifactId>zzyl-oss</artifactId>
+        </dependency>
+
         <!-- 护理业务模块-->
         <dependency>
             <groupId>com.zzyl</groupId>
