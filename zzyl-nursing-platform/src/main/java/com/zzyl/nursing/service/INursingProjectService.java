@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzyl.nursing.domain .NursingProject;
+import com.zzyl.nursing.vo.NursingProjectVo;
 
 /**
  * 护理项目Service接口
@@ -59,4 +60,6 @@ public interface INursingProjectService extends IService<NursingProject> {
      * @return 结果
      */
     public int deleteNursingProjectById(Long id);
+
+    List<NursingProjectVo> all();
 }

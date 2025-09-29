@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.NursingProjectPlanMapper">
+
+    <resultMap type="NursingProjectPlan" id="NursingProjectPlanResult">
+        <result property="id"    column="id"    />
+        <result property="planId"    column="plan_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="executeTime"    column="execute_time"    />
+        <result property="executeCycle"    column="execute_cycle"    />
+        <result property="executeFrequency"    column="execute_frequency"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectNursingProjectPlanVo">
+        select id, plan_id, project_id, execute_time, execute_cycle, execute_frequency, create_time, update_time, create_by, update_by, remark from nursing_project_plan
+    </sql>
+
+    <select id="selectNursingProjectPlanList" parameterType="NursingProjectPlan" resultMap="NursingProjectPlanResult">
+        <include refid="selectNursingProjectPlanVo"/>
+        <where>
+            <if test="planId != null "> and plan_id = #{planId}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="executeTime != null  and executeTime != ''"> and execute_time = #{executeTime}</if>
+            <if test="executeCycle != null "> and execute_cycle = #{executeCycle}</if>
+            <if test="executeFrequency != null "> and execute_frequency = #{executeFrequency}</if>
+        </where>
+    </select>
+
+    <select id="selectNursingProjectPlanById" parameterType="Long" resultMap="NursingProjectPlanResult">
+        <include refid="selectNursingProjectPlanVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByPlanId" resultType="com.zzyl.nursing.vo.NursingProjectPlanVo">
+        select id, plan_id, project_id, execute_time, execute_cycle, execute_frequency
+        from nursing_project_plan
+        where plan_id = #{id}
+    </select>
+
+    <insert id="insertNursingProjectPlan" parameterType="NursingProjectPlan" useGeneratedKeys="true" keyProperty="id">
+        insert into nursing_project_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planId != null">plan_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="executeTime != null and executeTime != ''">execute_time,</if>
+            <if test="executeCycle != null">execute_cycle,</if>
+            <if test="executeFrequency != null">execute_frequency,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planId != null">#{planId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="executeTime != null and executeTime != ''">#{executeTime},</if>
+            <if test="executeCycle != null">#{executeCycle},</if>
+            <if test="executeFrequency != null">#{executeFrequency},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into nursing_project_plan
+        (plan_id, project_id, execute_time, execute_cycle, execute_frequency, create_time) 
+        values 
+            <foreach collection="projectPlans" item="projectPlan" separator=",">
+                (#{projectPlan.planId}, #{projectPlan.projectId}, #{projectPlan.executeTime}, #{projectPlan.executeCycle}, #{projectPlan.executeFrequency}, now())
+            </foreach>
+    </insert>
+
+    <update id="updateNursingProjectPlan" parameterType="NursingProjectPlan">
+        update nursing_project_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planId != null">plan_id = #{planId},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="executeTime != null and executeTime != ''">execute_time = #{executeTime},</if>
+            <if test="executeCycle != null">execute_cycle = #{executeCycle},</if>
+            <if test="executeFrequency != null">execute_frequency = #{executeFrequency},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNursingProjectPlanById" parameterType="Long">
+        delete from nursing_project_plan where id = #{id}
+    </delete>
+
+    <delete id="deleteNursingProjectPlanByIds" parameterType="String">
+        delete from nursing_project_plan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

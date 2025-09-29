@@ -2,6 +2,8 @@ package com.zzyl.nursing.service.impl;
 
 import java.util.List;
 import java.util.Arrays;
+
+import com.zzyl.nursing.vo.NursingProjectVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zzyl.nursing.mapper.NursingProjectMapper;
@@ -88,5 +90,10 @@ public class NursingProjectServiceImpl extends ServiceImpl<NursingProjectMapper,
     @Override
     public int deleteNursingProjectById(Long id) {
         return removeById(id) ? 1 : 0;
+    }
+
+    @Override
+    public List<NursingProjectVo> all() {
+        return nursingProjectMapper.all();
     }
 }

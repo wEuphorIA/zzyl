@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zzyl.nursing.domain.NursingLevel;
+import com.zzyl.nursing.vo.NursingLevelVo;
 
 /**
  * 护理等级Mapper接口
@@ -26,7 +27,7 @@ public interface NursingLevelMapper extends BaseMapper<NursingLevel> {
      * @param nursingLevel 护理等级
      * @return 护理等级集合
      */
-    public List<NursingLevel> selectNursingLevelList(NursingLevel nursingLevel);
+    public List<NursingLevelVo> selectNursingLevelList(NursingLevel nursingLevel);
 
     /**
      * 新增护理等级
