@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.zzyl.common.constant.CacheConstants;
 import com.zzyl.common.constant.Constants;
 import com.zzyl.common.constant.UserConstants;
+import com.zzyl.common.core.domain.entity.SysUser;
 import com.zzyl.common.core.domain.model.LoginUser;
 import com.zzyl.common.core.redis.RedisCache;
 import com.zzyl.common.exception.ServiceException;
@@ -171,6 +172,10 @@ public class SysLoginService
      */
     public void recordLoginInfo(Long userId)
     {
-        userService.updateLoginInfo(userId, IpUtils.getIpAddr(), DateUtils.getNowDate());
+        SysUser sysUser = new SysUser();
+        sysUser.setUserId(userId);
+        sysUser.setLoginIp(IpUtils.getIpAddr());
+        sysUser.setLoginDate(DateUtils.getNowDate());
+        userService.updateUserProfile(sysUser);
     }
 }

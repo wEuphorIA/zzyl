@@ -38,12 +38,6 @@
         where id = #{id}
     </select>
 
-    <select id="selectByPlanId" resultType="com.zzyl.nursing.vo.NursingProjectPlanVo">
-        select id, plan_id, project_id, execute_time, execute_cycle, execute_frequency
-        from nursing_project_plan
-        where plan_id = #{id}
-    </select>
-
     <insert id="insertNursingProjectPlan" parameterType="NursingProjectPlan" useGeneratedKeys="true" keyProperty="id">
         insert into nursing_project_plan
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -73,12 +67,12 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into nursing_project_plan
-        (plan_id, project_id, execute_time, execute_cycle, execute_frequency, create_time) 
-        values 
-            <foreach collection="projectPlans" item="projectPlan" separator=",">
-                (#{projectPlan.planId}, #{projectPlan.projectId}, #{projectPlan.executeTime}, #{projectPlan.executeCycle}, #{projectPlan.executeFrequency}, now())
-            </foreach>
+        insert into nursing_project_plan(plan_id, project_id, execute_time, execute_cycle, execute_frequency,
+                                         create_time, remark) values
+        <foreach collection="projectPlans" item="item" separator=",">
+            (#{planId}, #{item.projectId}, #{item.executeTime}, #{item.executeCycle}, #{item.executeFrequency},
+            sysdate(), #{item.remark})
+        </foreach>
     </insert>
 
     <update id="updateNursingProjectPlan" parameterType="NursingProjectPlan">
@@ -105,6 +99,13 @@
     <delete id="deleteNursingProjectPlanByIds" parameterType="String">
         delete from nursing_project_plan where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="batchDeleteByPlanIds">
+        delete from nursing_project_plan where plan_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
     </delete>

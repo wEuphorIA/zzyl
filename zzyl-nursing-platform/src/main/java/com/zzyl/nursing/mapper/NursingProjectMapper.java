@@ -1,22 +1,24 @@
 package com.zzyl.nursing.mapper;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zzyl.nursing.domain.NursingProject;
 import com.zzyl.nursing.vo.NursingProjectVo;
+import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
+import com.zzyl.nursing.domain.NursingProject;
 import org.apache.ibatis.annotations.Select;
 
 /**
  * 护理项目Mapper接口
- *
- * @author Euphoria
- * @date 2025-09-27
+ * 
+ * @author alexis
+ * @date 2024-12-30
  */
-public interface NursingProjectMapper extends BaseMapper<NursingProject> {
+@Mapper
+public interface NursingProjectMapper extends BaseMapper<NursingProject>
+{
     /**
      * 查询护理项目
-     *
+     * 
      * @param id 护理项目主键
      * @return 护理项目
      */
@@ -24,7 +26,7 @@ public interface NursingProjectMapper extends BaseMapper<NursingProject> {
 
     /**
      * 查询护理项目列表
-     *
+     * 
      * @param nursingProject 护理项目
      * @return 护理项目集合
      */
@@ -32,7 +34,7 @@ public interface NursingProjectMapper extends BaseMapper<NursingProject> {
 
     /**
      * 新增护理项目
-     *
+     * 
      * @param nursingProject 护理项目
      * @return 结果
      */
@@ -40,7 +42,7 @@ public interface NursingProjectMapper extends BaseMapper<NursingProject> {
 
     /**
      * 修改护理项目
-     *
+     * 
      * @param nursingProject 护理项目
      * @return 结果
      */
@@ -48,7 +50,7 @@ public interface NursingProjectMapper extends BaseMapper<NursingProject> {
 
     /**
      * 删除护理项目
-     *
+     * 
      * @param id 护理项目主键
      * @return 结果
      */
@@ -56,16 +58,17 @@ public interface NursingProjectMapper extends BaseMapper<NursingProject> {
 
     /**
      * 批量删除护理项目
-     *
+     * 
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
     public int deleteNursingProjectByIds(Long[] ids);
 
     /**
-     查询全部护理项目
-     * @return
+     * 获取护理项目列表
+     * @return  护理项目vo列表
      */
-    @Select("select id value,name label from nursing_project where status = 1")
-    List<NursingProjectVo> all();
+    @Select("select name label, id value from nursing_project where status = 1")
+    List<NursingProjectVo> getAllProjects();
+
 }

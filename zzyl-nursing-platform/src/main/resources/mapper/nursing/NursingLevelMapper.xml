@@ -22,20 +22,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, name, lplan_id, fee, status, description, remark, create_time, update_time, create_by, update_by from nursing_level
     </sql>
 
-
+    <select id="selectNursingLevelList" parameterType="NursingLevel" resultMap="NursingLevelResult">
+        <include refid="selectNursingLevelVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="lplanId != null "> and lplan_id = #{lplanId}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
     
     <select id="selectNursingLevelById" parameterType="Long" resultMap="NursingLevelResult">
         <include refid="selectNursingLevelVo"/>
         where id = #{id}
     </select>
 
-    <select id="selectNursingLevelList" resultType="com.zzyl.nursing.vo.NursingLevelVo">
-        select nl.*,np.plan_name planName
+    <select id="selectNursingLevelVoList" resultType="com.zzyl.nursing.vo.NursingLevelVo">
+        select nl.id, name, lplan_id, fee, nl.status, description, nl.create_time, nl.create_by, nl.update_by, nl.update_time, np.plan_name planName
         from nursing_level nl
-        left join nursing_plan np on nl.lplan_id = np.id
+        join nursing_plan np on nl.lplan_id = np.id
         <where>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="status != null ">and status = #{status}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         </where>
     </select>
 
@@ -46,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lplanId != null">lplan_id,</if>
             <if test="fee != null">fee,</if>
             <if test="status != null">status,</if>
-            <if test="description != null and description != ''">description,</if>
+            <if test="description != null">description,</if>
             <if test="remark != null">remark,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -58,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lplanId != null">#{lplanId},</if>
             <if test="fee != null">#{fee},</if>
             <if test="status != null">#{status},</if>
-            <if test="description != null and description != ''">#{description},</if>
+            <if test="description != null">#{description},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -74,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lplanId != null">lplan_id = #{lplanId},</if>
             <if test="fee != null">fee = #{fee},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="description != null">description = #{description},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

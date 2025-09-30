@@ -1,7 +1,6 @@
 package com.zzyl.system.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
@@ -327,7 +326,7 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public int updateUserStatus(SysUser user)
     {
-        return userMapper.updateUserStatus(user.getUserId(), user.getStatus());
+        return userMapper.updateUser(user);
     }
 
     /**
@@ -345,27 +344,14 @@ public class SysUserServiceImpl implements ISysUserService
     /**
      * 修改用户头像
      * 
-     * @param userId 用户ID
+     * @param userName 用户名
      * @param avatar 头像地址
      * @return 结果
      */
     @Override
-    public boolean updateUserAvatar(Long userId, String avatar)
+    public boolean updateUserAvatar(String userName, String avatar)
     {
-        return userMapper.updateUserAvatar(userId, avatar) > 0;
-    }
-
-    /**
-     * 更新用户登录信息（IP和登录时间）
-     * 
-     * @param userId 用户ID
-     * @param loginIp 登录IP地址
-     * @param loginDate 登录时间
-     * @return 结果
-     */
-    public void updateLoginInfo(Long userId, String loginIp, Date loginDate)
-    {
-        userMapper.updateLoginInfo(userId, loginIp, loginDate);
+        return userMapper.updateUserAvatar(userName, avatar) > 0;
     }
 
     /**
@@ -377,20 +363,20 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public int resetPwd(SysUser user)
     {
-        return userMapper.resetUserPwd(user.getUserId(), user.getPassword());
+        return userMapper.updateUser(user);
     }
 
     /**
      * 重置用户密码
      * 
-     * @param userId 用户ID
+     * @param userName 用户名
      * @param password 密码
      * @return 结果
      */
     @Override
-    public int resetUserPwd(Long userId, String password)
+    public int resetUserPwd(String userName, String password)
     {
-        return userMapper.resetUserPwd(userId, password);
+        return userMapper.resetUserPwd(userName, password);
     }
 
     /**
@@ -531,7 +517,6 @@ public class SysUserServiceImpl implements ISysUserService
                     checkUserDataScope(u.getUserId());
                     deptService.checkDeptDataScope(user.getDeptId());
                     user.setUserId(u.getUserId());
-                    user.setDeptId(u.getDeptId());
                     user.setUpdateBy(operName);
                     userMapper.updateUser(user);
                     successNum++;
@@ -561,5 +546,17 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    /**
+     * 根据部门编号查询员工列表
+     *
+     * @param deptId
+     * @return
+     */
+    @Override
+    public List<SysUser> getUserListByDept(Long deptId) {
+        List<SysUser> users = userMapper.getUserListByDept(deptId);
+        return users;
     }
 }

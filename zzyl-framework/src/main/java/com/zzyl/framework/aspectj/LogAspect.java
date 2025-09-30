@@ -20,11 +20,9 @@ import com.alibaba.fastjson2.JSON;
 import com.zzyl.common.annotation.Log;
 import com.zzyl.common.core.domain.entity.SysUser;
 import com.zzyl.common.core.domain.model.LoginUser;
-import com.zzyl.common.core.text.Convert;
 import com.zzyl.common.enums.BusinessStatus;
 import com.zzyl.common.enums.HttpMethod;
 import com.zzyl.common.filter.PropertyPreExcludeFilter;
-import com.zzyl.common.utils.ExceptionUtil;
 import com.zzyl.common.utils.SecurityUtils;
 import com.zzyl.common.utils.ServletUtils;
 import com.zzyl.common.utils.StringUtils;
@@ -54,7 +52,7 @@ public class LogAspect
      * 处理请求前执行
      */
     @Before(value = "@annotation(controllerLog)")
-    public void doBefore(JoinPoint joinPoint, Log controllerLog)
+    public void boBefore(JoinPoint joinPoint, Log controllerLog)
     {
         TIME_THREADLOCAL.set(System.currentTimeMillis());
     }
@@ -109,7 +107,7 @@ public class LogAspect
             if (e != null)
             {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
-                operLog.setErrorMsg(StringUtils.substring(Convert.toStr(e.getMessage(), ExceptionUtil.getExceptionMessage(e)), 0, 2000));
+                operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
             }
             // 设置方法名称
             String className = joinPoint.getTarget().getClass().getName();

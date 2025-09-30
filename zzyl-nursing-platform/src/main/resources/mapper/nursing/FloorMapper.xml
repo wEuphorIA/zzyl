@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.FloorMapper">
+    
+    <resultMap type="Floor" id="FloorResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFloorVo">
+        select id, name, code, create_time, update_time, create_by, update_by, remark from floor
+    </sql>
+
+    <select id="selectFloorList" parameterType="Floor" resultMap="FloorResult">
+        <include refid="selectFloorVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null "> and code = #{code}</if>
+        </where>
+    </select>
+    
+    <select id="selectFloorById" parameterType="Long" resultMap="FloorResult">
+        <include refid="selectFloorVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFloor" parameterType="Floor" useGeneratedKeys="true" keyProperty="id">
+        insert into floor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFloor" parameterType="Floor">
+        update floor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFloorById" parameterType="Long">
+        delete from floor where id = #{id}
+    </delete>
+
+    <delete id="deleteFloorByIds" parameterType="String">
+        delete from floor where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAllByNur" resultType="com.zzyl.nursing.domain.Floor">
+        select f.*
+        from floor f
+                 left join room r on r.floor_id = f.id
+                 left join bed b on b.room_id = r.id
+                 left join elder e on e.bed_id = b.id
+        where b.bed_status = 1
+        group by f.id
+        order by code, create_time desc
+    </select>
+</mapper>

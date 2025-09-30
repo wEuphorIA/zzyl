@@ -5,7 +5,7 @@
     <parent>
         <artifactId>zzyl</artifactId>
         <groupId>com.zzyl</groupId>
-        <version>3.9.0</version>
+        <version>3.8.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
@@ -17,23 +17,27 @@
 
     <dependencies>
 
+        <!-- spring-boot-devtools -->
         <dependency>
-            <groupId>com.zzyl</groupId>
-            <artifactId>zzyl-oss</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional> <!-- 表示依赖不会传递 -->
+        </dependency>
+        <!--
+        &lt;!&ndash; swagger3&ndash;&gt;
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
         </dependency>
 
-        <!-- 护理业务模块-->
-        <dependency>
-            <groupId>com.zzyl</groupId>
-            <artifactId>zzyl-nursing-platform</artifactId>
-        </dependency>
-
-        <!-- 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 -->
+        &lt;!&ndash; 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 &ndash;&gt;
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
             <version>1.6.2</version>
         </dependency>
+
+        -->
 
          <!-- Mysql驱动包 -->
         <dependency>
@@ -57,6 +61,18 @@
         <dependency>
             <groupId>com.zzyl</groupId>
             <artifactId>zzyl-generator</artifactId>
+        </dependency>
+
+        <!-- 护理平台模块 -->
+        <dependency>
+            <groupId>com.zzyl</groupId>
+            <artifactId>zzyl-nursing-platform</artifactId>
+        </dependency>
+
+        <!-- 引入OSS模块 -->
+        <dependency>
+            <groupId>com.zzyl</groupId>
+            <artifactId>zzyl-oss</artifactId>
         </dependency>
 
     </dependencies>

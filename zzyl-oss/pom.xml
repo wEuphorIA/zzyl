@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.zzyl</groupId>
         <artifactId>zzyl</artifactId>
-        <version>3.9.0</version>
+        <version>3.8.8</version>
     </parent>
 
     <artifactId>zzyl-oss</artifactId>
@@ -28,4 +28,5 @@
             <artifactId>zzyl-common</artifactId>
         </dependency>
     </dependencies>
+
 </project>

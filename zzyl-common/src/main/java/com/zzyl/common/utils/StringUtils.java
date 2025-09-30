@@ -287,32 +287,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     }
 
     /**
-     * 在字符串中查找第一个出现的 `open` 和最后一个出现的 `close` 之间的子字符串
-     * 
-     * @param str 要截取的字符串
-     * @param open 起始字符串
-     * @param close 结束字符串
-     * @return 截取结果
-     */
-    public static String substringBetweenLast(final String str, final String open, final String close)
-    {
-        if (isEmpty(str) || isEmpty(open) || isEmpty(close))
-        {
-            return NULLSTR;
-        }
-        final int start = str.indexOf(open);
-        if (start != INDEX_NOT_FOUND)
-        {
-            final int end = str.lastIndexOf(close);
-            if (end != INDEX_NOT_FOUND)
-            {
-                return str.substring(start + open.length(), end);
-            }
-        }
-        return NULLSTR;
-    }
-
-    /**
      * 判断是否为空，并且不是空白字符
      * 
      * @param str 要判断的value
@@ -379,18 +353,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     public static final Set<String> str2Set(String str, String sep)
     {
         return new HashSet<String>(str2List(str, sep, true, false));
-    }
-
-    /**
-     * 字符串转list
-     * 
-     * @param str 字符串
-     * @param sep 分隔符
-     * @return list集合
-     */
-    public static final List<String> str2List(String str, String sep)
-    {
-        return str2List(str, sep, true, false);
     }
 
     /**

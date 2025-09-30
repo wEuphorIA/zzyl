@@ -23,8 +23,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectNursingPlanList" parameterType="NursingPlan" resultMap="NursingPlanResult">
         <include refid="selectNursingPlanVo"/>
         <where>  
-            <if test="status != null "> and status = #{status}</if>
+            <if test="sortNo != null "> and sort_no = #{sortNo}</if>
             <if test="planName != null  and planName != ''"> and plan_name like concat('%', #{planName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
     

@@ -28,6 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectNursingProjectVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
+            <if test="unit != null  and unit != ''"> and unit = #{unit}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="nursingRequirement != null  and nursingRequirement != ''"> and nursing_requirement = #{nursingRequirement}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
@@ -40,12 +45,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertNursingProject" parameterType="NursingProject" useGeneratedKeys="true" keyProperty="id">
         insert into nursing_project
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null and name != ''">name,</if>
+            <if test="name != null">name,</if>
             <if test="orderNo != null">order_no,</if>
             <if test="unit != null">unit,</if>
             <if test="price != null">price,</if>
-            <if test="image != null and image != ''">image,</if>
-            <if test="nursingRequirement != null and nursingRequirement != ''">nursing_requirement,</if>
+            <if test="image != null">image,</if>
+            <if test="nursingRequirement != null">nursing_requirement,</if>
             <if test="status != null">status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateBy != null">update_by,</if>
@@ -54,12 +59,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null and name != ''">#{name},</if>
+            <if test="name != null">#{name},</if>
             <if test="orderNo != null">#{orderNo},</if>
             <if test="unit != null">#{unit},</if>
             <if test="price != null">#{price},</if>
-            <if test="image != null and image != ''">#{image},</if>
-            <if test="nursingRequirement != null and nursingRequirement != ''">#{nursingRequirement},</if>
+            <if test="image != null">#{image},</if>
+            <if test="nursingRequirement != null">#{nursingRequirement},</if>
             <if test="status != null">#{status},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -72,12 +77,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateNursingProject" parameterType="NursingProject">
         update nursing_project
         <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="name != null">name = #{name},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="unit != null">unit = #{unit},</if>
             <if test="price != null">price = #{price},</if>
-            <if test="image != null and image != ''">image = #{image},</if>
-            <if test="nursingRequirement != null and nursingRequirement != ''">nursing_requirement = #{nursingRequirement},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="nursingRequirement != null">nursing_requirement = #{nursingRequirement},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

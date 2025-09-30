@@ -1,13 +1,12 @@
 package ${packageName}.controller;
 
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+
 import com.zzyl.common.core.domain.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,92 +31,97 @@ import com.zzyl.common.core.page.TableDataInfo;
 
 /**
  * ${functionName}Controller
- *
+ * 
  * @author ${author}
  * @date ${datetime}
  */
+@Api(tags = "${functionName}管理")
 @RestController
-@RequestMapping("/${moduleName}/${businessName}" )
-@Api(tags = "${functionName}相关接口" )
-public class ${ClassName}Controller extends BaseController {
-
+@RequestMapping("/${moduleName}/${businessName}")
+public class ${ClassName}Controller extends BaseController
+{
     @Autowired
     private I${ClassName}Service ${className}Service;
 
-/**
- * 查询${functionName}列表
- */
-@PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')" )
-@GetMapping("/list" )
-@ApiOperation("查询${functionName}列表" )
-    #if($table.crud || $table.sub)
-    public TableDataInfo<${ClassName}> list(@ApiParam(value = "${functionName}查询条件" ) ${ClassName} ${className}) {
+    /**
+     * 查询${functionName}列表
+     */
+    @ApiOperation("查询${functionName}列表")
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
+    @GetMapping("/list")
+#if($table.crud || $table.sub)
+    public TableDataInfo<List<${ClassName}>> list(@ApiParam("${functionName}查询条件") ${ClassName} ${className})
+    {
         startPage();
         List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
         return getDataTable(list);
     }
-    #elseif($table.tree)
-        public AjaxResult list(${ClassName} ${className}) {
-            List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
-            return success(list);
-        }
-    #end
+#elseif($table.tree)
+    public AjaxResult list(${ClassName} ${className})
+    {
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        return success(list);
+    }
+#end
 
     /**
      * 导出${functionName}列表
      */
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')" )
-    @Log(title = "${functionName}" , businessType = BusinessType.EXPORT)
-    @PostMapping("/export" )
-    @ApiOperation("导出${functionName}列表" )
-    public void export(HttpServletResponse response, @ApiParam(value = "${functionName}查询条件" ) ${ClassName} ${className}) {
+    @ApiOperation("导出${functionName}列表")
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')")
+    @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(@ApiParam(value = "${functionName}查询条件") HttpServletResponse response, ${ClassName} ${className})
+    {
         List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
-        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}. class);
-        util.exportExcel(response, list, "${functionName}数据" );
+        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
+        util.exportExcel(response, list, "${functionName}数据");
     }
 
     /**
      * 获取${functionName}详细信息
      */
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')" )
-    @GetMapping(value = "/{${pkColumn.javaField}}" )
-    @ApiOperation("获取${functionName}详细信息" )
-    public R<${ClassName}> getInfo(@ApiParam(value = "${functionName}ID" , required = true)
-                                   @PathVariable("${pkColumn.javaField}" ) ${pkColumn.javaType} ${pkColumn.javaField}) {
-        ##        return success(${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField}));
+    @ApiOperation("获取${functionName}详细信息")
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')")
+    @GetMapping(value = "/{${pkColumn.javaField}}")
+    public R<${ClassName}> getInfo(@ApiParam("${functionName}ID") @PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
+    {
         return R.ok(${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField}));
     }
 
     /**
      * 新增${functionName}
      */
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')" )
-    @Log(title = "${functionName}" , businessType = BusinessType.INSERT)
+    @ApiOperation("新增${functionName}")
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')")
+    @Log(title = "${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
-    @ApiOperation("新增${functionName}" )
-    public AjaxResult add(@ApiParam(value = "${functionName}实体" , required = true) @RequestBody ${ClassName} ${className}) {
+    public AjaxResult add(@ApiParam("${functionName}信息") @RequestBody ${ClassName} ${className})
+    {
         return toAjax(${className}Service.insert${ClassName}(${className}));
     }
 
     /**
      * 修改${functionName}
      */
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')" )
-    @Log(title = "${functionName}" , businessType = BusinessType.UPDATE)
+    @ApiOperation("修改${functionName}")
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')")
+    @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
-    @ApiOperation("修改${functionName}" )
-    public AjaxResult edit(@ApiParam(value = "${functionName}实体" , required = true) @RequestBody ${ClassName} ${className}) {
+    public AjaxResult edit(@ApiParam("${functionName}信息") @RequestBody ${ClassName} ${className})
+    {
         return toAjax(${className}Service.update${ClassName}(${className}));
     }
 
     /**
      * 删除${functionName}
      */
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')" )
-    @Log(title = "${functionName}" , businessType = BusinessType.DELETE)
-    @DeleteMapping("/{${pkColumn.javaField}s}" )
-    @ApiOperation("删除${functionName}" )
-    public AjaxResult remove(@ApiParam(value = "${functionName}ID数组" , required = true) @PathVariable ${pkColumn.javaType}[] ${pkColumn.javaField}s) {
+    @ApiOperation("删除${functionName}")
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')")
+    @Log(title = "${functionName}", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{${pkColumn.javaField}s}")
+    public AjaxResult remove(@ApiParam("${functionName}ID数组") @PathVariable ${pkColumn.javaType}[] ${pkColumn.javaField}s)
+    {
         return toAjax(${className}Service.delete${ClassName}By${pkColumn.capJavaField}s(${pkColumn.javaField}s));
     }
 }

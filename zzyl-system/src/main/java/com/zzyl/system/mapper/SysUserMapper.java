@@ -1,9 +1,9 @@
 package com.zzyl.system.mapper;
 
-import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import com.zzyl.common.core.domain.entity.SysUser;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 用户表 数据层
@@ -71,39 +71,20 @@ public interface SysUserMapper
     /**
      * 修改用户头像
      * 
-     * @param userId 用户ID
+     * @param userName 用户名
      * @param avatar 头像地址
      * @return 结果
      */
-    public int updateUserAvatar(@Param("userId") Long userId, @Param("avatar") String avatar);
-
-    /**
-     * 修改用户状态
-     * 
-     * @param userId 用户ID
-     * @param status 状态
-     * @return 结果
-     */
-    public int updateUserStatus(@Param("userId") Long userId, @Param("status") String status);
-
-    /**
-     * 更新用户登录信息（IP和登录时间）
-     * 
-     * @param userId 用户ID
-     * @param loginIp 登录IP地址
-     * @param loginDate 登录时间
-     * @return 结果
-     */
-    public int updateLoginInfo(@Param("userId") Long userId, @Param("loginIp") String loginIp, @Param("loginDate") Date loginDate);
+    public int updateUserAvatar(@Param("userName") String userName, @Param("avatar") String avatar);
 
     /**
      * 重置用户密码
      * 
-     * @param userId 用户ID
+     * @param userName 用户名
      * @param password 密码
      * @return 结果
      */
-    public int resetUserPwd(@Param("userId") Long userId, @Param("password") String password);
+    public int resetUserPwd(@Param("userName") String userName, @Param("password") String password);
 
     /**
      * 通过用户ID删除用户
@@ -144,4 +125,7 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
+
+    @Select("select * from sys_user where dept_id = #{deptId}")
+    List<SysUser> getUserListByDept(Long deptId);
 }

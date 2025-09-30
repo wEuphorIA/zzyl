@@ -10,7 +10,6 @@ import com.zzyl.common.core.domain.model.RegisterBody;
 import com.zzyl.common.core.redis.RedisCache;
 import com.zzyl.common.exception.user.CaptchaException;
 import com.zzyl.common.exception.user.CaptchaExpireException;
-import com.zzyl.common.utils.DateUtils;
 import com.zzyl.common.utils.MessageUtils;
 import com.zzyl.common.utils.SecurityUtils;
 import com.zzyl.common.utils.StringUtils;
@@ -77,7 +76,6 @@ public class SysRegisterService
         else
         {
             sysUser.setNickName(username);
-            sysUser.setPwdUpdateDate(DateUtils.getNowDate());
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
             boolean regFlag = userService.registerUser(sysUser);
             if (!regFlag)

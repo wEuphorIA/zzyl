@@ -1,10 +1,5 @@
 package com.zzyl.common.core.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,23 +7,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Entity基类
- * 
+ *
  * @author ruoyi
  */
-@ApiModel("基础实体类")
+@ApiModel(description = "实体基类")
 public class BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
     /** 搜索值 */
     @JsonIgnore
-    @ApiModelProperty(value = "搜索值", hidden = true)
+    @ApiModelProperty(hidden = true)
     @TableField(exist = false)
     private String searchValue;
 
@@ -39,8 +36,8 @@ public class BaseEntity implements Serializable
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间")
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /** 更新者 */
@@ -50,8 +47,8 @@ public class BaseEntity implements Serializable
 
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(fill = FieldFill.UPDATE)
     @ApiModelProperty(value = "更新时间")
+    @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
 
     /** 备注 */

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.NursingTaskMapper">
+    
+    <resultMap type="NursingTask" id="NursingTaskResult">
+        <result property="id"    column="id"    />
+        <result property="nursingId"    column="nursing_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="estimatedServerTime"    column="estimated_server_time"    />
+        <result property="realServerTime"    column="real_server_time"    />
+        <result property="mark"    column="mark"    />
+        <result property="cancelReason"    column="cancel_reason"    />
+        <result property="status"    column="status"    />
+        <result property="taskImage"    column="task_image"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectNursingTaskVo">
+        select id, nursing_id, project_id, project_name, elder_id, elder_name, bed_number, estimated_server_time, real_server_time, mark, cancel_reason, status, task_image, create_time, update_time, create_by, update_by, remark from nursing_task
+    </sql>
+
+    <select id="selectNursingTaskList" parameterType="NursingTask" resultMap="NursingTaskResult">
+        <include refid="selectNursingTaskVo"/>
+        <where>  
+            <if test="nursingId != null  and nursingId != ''"> and nursing_id = #{nursingId}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number = #{bedNumber}</if>
+            <if test="estimatedServerTime != null "> and estimated_server_time = #{estimatedServerTime}</if>
+            <if test="realServerTime != null "> and real_server_time = #{realServerTime}</if>
+            <if test="mark != null  and mark != ''"> and mark = #{mark}</if>
+            <if test="cancelReason != null  and cancelReason != ''"> and cancel_reason = #{cancelReason}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="taskImage != null  and taskImage != ''"> and task_image = #{taskImage}</if>
+        </where>
+    </select>
+    
+    <select id="selectNursingTaskById" parameterType="Long" resultMap="NursingTaskResult">
+        <include refid="selectNursingTaskVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNursingTask" parameterType="NursingTask" useGeneratedKeys="true" keyProperty="id">
+        insert into nursing_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nursingId != null">nursing_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="elderName != null">elder_name,</if>
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="estimatedServerTime != null">estimated_server_time,</if>
+            <if test="realServerTime != null">real_server_time,</if>
+            <if test="mark != null">mark,</if>
+            <if test="cancelReason != null">cancel_reason,</if>
+            <if test="status != null">status,</if>
+            <if test="taskImage != null">task_image,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nursingId != null">#{nursingId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="elderName != null">#{elderName},</if>
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="estimatedServerTime != null">#{estimatedServerTime},</if>
+            <if test="realServerTime != null">#{realServerTime},</if>
+            <if test="mark != null">#{mark},</if>
+            <if test="cancelReason != null">#{cancelReason},</if>
+            <if test="status != null">#{status},</if>
+            <if test="taskImage != null">#{taskImage},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNursingTask" parameterType="NursingTask">
+        update nursing_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nursingId != null">nursing_id = #{nursingId},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="elderName != null">elder_name = #{elderName},</if>
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="estimatedServerTime != null">estimated_server_time = #{estimatedServerTime},</if>
+            <if test="realServerTime != null">real_server_time = #{realServerTime},</if>
+            <if test="mark != null">mark = #{mark},</if>
+            <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="taskImage != null">task_image = #{taskImage},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNursingTaskById" parameterType="Long">
+        delete from nursing_task where id = #{id}
+    </delete>
+
+    <delete id="deleteNursingTaskByIds" parameterType="String">
+        delete from nursing_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

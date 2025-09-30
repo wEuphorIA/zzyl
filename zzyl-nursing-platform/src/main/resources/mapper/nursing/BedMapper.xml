@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.BedMapper">
+    
+    <resultMap type="Bed" id="BedResult">
+        <result property="id"    column="id"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="bedStatus"    column="bed_status"    />
+        <result property="sort"    column="sort"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBedVo">
+        select id, bed_number, bed_status, sort, room_id, create_time, update_time, create_by, update_by, remark from bed
+    </sql>
+
+    <select id="selectBedList" parameterType="Bed" resultMap="BedResult">
+        <include refid="selectBedVo"/>
+        <where>  
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number = #{bedNumber}</if>
+            <if test="bedStatus != null "> and bed_status = #{bedStatus}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="roomId != null "> and room_id = #{roomId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBedById" parameterType="Long" resultMap="BedResult">
+        <include refid="selectBedVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBed" parameterType="Bed" useGeneratedKeys="true" keyProperty="id">
+        insert into bed
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="bedStatus != null">bed_status,</if>
+            <if test="sort != null">sort,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="bedStatus != null">#{bedStatus},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBed" parameterType="Bed">
+        update bed
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="bedStatus != null">bed_status = #{bedStatus},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBedById" parameterType="Long">
+        delete from bed where id = #{id}
+    </delete>
+
+    <delete id="deleteBedByIds" parameterType="String">
+        delete from bed where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
