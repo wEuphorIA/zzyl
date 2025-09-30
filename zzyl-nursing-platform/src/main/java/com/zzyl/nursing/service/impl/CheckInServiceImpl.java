@@ -1,0 +1,182 @@
+package com.zzyl.nursing.service.impl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.zzyl.common.utils.DateUtils;
+import com.zzyl.nursing.domain.*;
+import com.zzyl.nursing.dto.CheckInApplyDto;
+import com.zzyl.nursing.mapper.*;
+import com.zzyl.nursing.util.CodeGenerator;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.zzyl.nursing.service.ICheckInService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ 入住Service业务层处理
+
+ @author Euphoria
+ @date 2025-09-30 */
+@Service
+public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> implements ICheckInService {
+
+    @Autowired
+    private CheckInMapper checkInMapper;
+
+    @Autowired
+    private ElderMapper elderMapper;
+
+    @Autowired
+    private CheckInConfigMapper checkInConfigMapper;
+
+    @Autowired
+    private ContractMapper contractMapper;
+
+    @Autowired
+    private BedMapper bedMapper;
+
+    /**
+     查询入住
+
+     @param id 入住主键
+     @return 入住
+     */
+    @Override
+    public CheckIn selectCheckInById(Long id) {
+        return checkInMapper.selectById(id);
+    }
+
+    /**
+     查询入住列表
+
+     @param checkIn 入住
+     @return 入住
+     */
+    @Override
+    public List<CheckIn> selectCheckInList(CheckIn checkIn) {
+        return checkInMapper.selectCheckInList(checkIn);
+    }
+
+    /**
+     新增入住
+
+     @param checkIn 入住
+     @return 结果
+     */
+    @Override
+    public int insertCheckIn(CheckIn checkIn) {
+        return checkInMapper.insert(checkIn);
+    }
+
+    /**
+     修改入住
+
+     @param checkIn 入住
+     @return 结果
+     */
+    @Override
+    public int updateCheckIn(CheckIn checkIn) {
+        return checkInMapper.updateById(checkIn);
+    }
+
+    /**
+     批量删除入住
+
+     @param ids 需要删除的入住主键
+     @return 结果
+     */
+    @Override
+    public int deleteCheckInByIds(Long[] ids) {
+        return checkInMapper.deleteBatchIds(Arrays.asList(ids));
+    }
+
+    /**
+     删除入住信息
+
+     @param id 入住主键
+     @return 结果
+     */
+    @Override
+    public int deleteCheckInById(Long id) {
+        return checkInMapper.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void apply(CheckInApplyDto checkInApplyDto) {
+
+        // 检验老人是否已入住
+
+        Elder checkElder = elderMapper.selectOne(new LambdaQueryWrapper<Elder>()
+                .eq(Elder::getIdCardNo, checkInApplyDto.getCheckInElderDto().getIdCardNo())
+                .eq(Elder::getStatus, 1));
+
+        if (ObjectUtil.isNotNull(checkElder)){
+            throw new RuntimeException("该老人已入住，不需要重复办理");
+        }
+
+        // 更新床位状态为已入住
+        Bed bed = bedMapper.selectById(checkInApplyDto.getCheckInConfigDto().getBedId());
+        bed.setBedStatus(1);
+        bedMapper.updateBed(bed);
+
+        Elder elder = new Elder();
+        BeanUtils.copyProperties(checkInApplyDto.getCheckInElderDto(),elder);
+        elder.setBedNumber(bed.getBedNumber());
+        elder.setBedId(bed.getId());
+
+        // 新增或更新老人
+        Elder elderDb = elderMapper.selectOne(new LambdaQueryWrapper<Elder>()
+                .eq(Elder::getIdCardNo, checkInApplyDto.getCheckInElderDto().getIdCardNo())
+                .ne(Elder::getStatus, 1));
+        if (ObjectUtil.isNotNull(elderDb)){
+            //修改
+            elder.setId(elderDb.getId());
+            elderMapper.updateElder(elder);
+        }else {
+            //新增
+            elderMapper.insert(elder);
+        }
+
+        // 新增签约办理
+        Contract contract = new Contract();
+        BeanUtils.copyProperties(checkInApplyDto.getCheckInContractDto(),contract);
+        contract.setElderId(elder.getId().intValue());
+        contract.setContractNumber("HT" + CodeGenerator.generateContractNumber());
+        contract.setElderName(elder.getName());
+        contract.setStartDate(checkInApplyDto.getCheckInConfigDto().getStartDate());
+        contract.setEndDate(checkInApplyDto.getCheckInConfigDto().getEndDate());
+        //如果当前时间在开始时间之后设置状态为1
+        if (LocalDateTime.now().isAfter(checkInApplyDto.getCheckInConfigDto().getStartDate())){
+            contract.setStatus(1);
+        }
+        contractMapper.insert(contract);
+
+        // 新增入住信息
+        CheckIn checkIn = new CheckIn();
+        checkIn.setElderId(elder.getId());
+        checkIn.setElderName(elder.getName());
+        checkIn.setIdCardNo(elder.getIdCardNo());
+        checkIn.setStartDate(checkInApplyDto.getCheckInConfigDto().getStartDate());
+        checkIn.setEndDate(checkInApplyDto.getCheckInConfigDto().getEndDate());
+        checkIn.setNursingLevelName(checkInApplyDto.getCheckInConfigDto().getNursingLevelName());
+        checkIn.setBedNumber(bed.getBedNumber());
+        checkIn.setRemark(JSON.toJSONString(checkInApplyDto.getElderFamilyDtoList()));
+
+        checkInMapper.insert(checkIn);
+
+        // 新增入住配置
+        CheckInConfig checkInConfig = new CheckInConfig();
+        BeanUtils.copyProperties(checkInApplyDto.getCheckInConfigDto(),checkInConfig);
+        checkInConfig.setCheckInId(checkIn.getId());
+        checkInConfigMapper.insert(checkInConfig);
+
+    }
+}

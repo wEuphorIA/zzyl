@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.ElderMapper">
+    
+    <resultMap type="Elder" id="ElderResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="image"    column="image"    />
+        <result property="idCardNo"    column="id_card_no"    />
+        <result property="sex"    column="sex"    />
+        <result property="status"    column="status"    />
+        <result property="phone"    column="phone"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="address"    column="address"    />
+        <result property="idCardNationalEmblemImg"    column="id_card_national_emblem_img"    />
+        <result property="idCardPortraitImg"    column="id_card_portrait_img"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="bedId"    column="bed_id"    />
+    </resultMap>
+
+    <sql id="selectElderVo">
+        select id, name, image, id_card_no, sex, status, phone, birthday, address, id_card_national_emblem_img, id_card_portrait_img, create_time, update_time, create_by, update_by, remark, bed_number, bed_id from elder
+    </sql>
+
+    <select id="selectElderList" parameterType="Elder" resultMap="ElderResult">
+        <include refid="selectElderVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="idCardNo != null  and idCardNo != ''"> and id_card_no = #{idCardNo}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="birthday != null  and birthday != ''"> and birthday = #{birthday}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="idCardNationalEmblemImg != null  and idCardNationalEmblemImg != ''"> and id_card_national_emblem_img = #{idCardNationalEmblemImg}</if>
+            <if test="idCardPortraitImg != null  and idCardPortraitImg != ''"> and id_card_portrait_img = #{idCardPortraitImg}</if>
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number = #{bedNumber}</if>
+            <if test="bedId != null "> and bed_id = #{bedId}</if>
+        </where>
+    </select>
+    
+    <select id="selectElderById" parameterType="Long" resultMap="ElderResult">
+        <include refid="selectElderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertElder" parameterType="Elder" useGeneratedKeys="true" keyProperty="id">
+        insert into elder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="image != null">image,</if>
+            <if test="idCardNo != null">id_card_no,</if>
+            <if test="sex != null">sex,</if>
+            <if test="status != null">status,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="address != null">address,</if>
+            <if test="idCardNationalEmblemImg != null">id_card_national_emblem_img,</if>
+            <if test="idCardPortraitImg != null">id_card_portrait_img,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="bedId != null">bed_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="image != null">#{image},</if>
+            <if test="idCardNo != null">#{idCardNo},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="status != null">#{status},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="address != null">#{address},</if>
+            <if test="idCardNationalEmblemImg != null">#{idCardNationalEmblemImg},</if>
+            <if test="idCardPortraitImg != null">#{idCardPortraitImg},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="bedId != null">#{bedId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElder" parameterType="Elder">
+        update elder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="idCardNo != null">id_card_no = #{idCardNo},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="idCardNationalEmblemImg != null">id_card_national_emblem_img = #{idCardNationalEmblemImg},</if>
+            <if test="idCardPortraitImg != null">id_card_portrait_img = #{idCardPortraitImg},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="bedId != null">bed_id = #{bedId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElderById" parameterType="Long">
+        delete from elder where id = #{id}
+    </delete>
+
+    <delete id="deleteElderByIds" parameterType="String">
+        delete from elder where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

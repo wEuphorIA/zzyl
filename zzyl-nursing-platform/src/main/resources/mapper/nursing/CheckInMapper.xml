@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.CheckInMapper">
+    
+    <resultMap type="CheckIn" id="CheckInResult">
+        <result property="id"    column="id"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="idCardNo"    column="id_card_no"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="nursingLevelName"    column="nursing_level_name"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="status"    column="status"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCheckInVo">
+        select id, elder_name, elder_id, id_card_no, start_date, end_date, nursing_level_name, bed_number, status, sort_order, create_time, update_time, create_by, update_by, remark from check_in
+    </sql>
+
+    <select id="selectCheckInList" parameterType="CheckIn" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        <where>  
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="idCardNo != null  and idCardNo != ''"> and id_card_no = #{idCardNo}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="nursingLevelName != null  and nursingLevelName != ''"> and nursing_level_name like concat('%', #{nursingLevelName}, '%')</if>
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number = #{bedNumber}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        </where>
+    </select>
+    
+    <select id="selectCheckInById" parameterType="Long" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCheckIn" parameterType="CheckIn" useGeneratedKeys="true" keyProperty="id">
+        insert into check_in
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderName != null and elderName != ''">elder_name,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="idCardNo != null and idCardNo != ''">id_card_no,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="nursingLevelName != null and nursingLevelName != ''">nursing_level_name,</if>
+            <if test="bedNumber != null and bedNumber != ''">bed_number,</if>
+            <if test="status != null">status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderName != null and elderName != ''">#{elderName},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="idCardNo != null and idCardNo != ''">#{idCardNo},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="nursingLevelName != null and nursingLevelName != ''">#{nursingLevelName},</if>
+            <if test="bedNumber != null and bedNumber != ''">#{bedNumber},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCheckIn" parameterType="CheckIn">
+        update check_in
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderName != null and elderName != ''">elder_name = #{elderName},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="idCardNo != null and idCardNo != ''">id_card_no = #{idCardNo},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="nursingLevelName != null and nursingLevelName != ''">nursing_level_name = #{nursingLevelName},</if>
+            <if test="bedNumber != null and bedNumber != ''">bed_number = #{bedNumber},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCheckInById" parameterType="Long">
+        delete from check_in where id = #{id}
+    </delete>
+
+    <delete id="deleteCheckInByIds" parameterType="String">
+        delete from check_in where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

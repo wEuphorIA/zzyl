@@ -67,4 +67,6 @@ public interface IRoomService extends IService<Room>
      * @return
      */
     List<RoomVo> getRoomsWithNurByFloorId(Long floorId);
+
+    RoomVo one(Long id);
 }

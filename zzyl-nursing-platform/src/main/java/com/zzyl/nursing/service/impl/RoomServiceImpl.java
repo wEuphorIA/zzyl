@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Service
 public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IRoomService {
+
     @Autowired
     private RoomMapper roomMapper;
 
@@ -98,5 +99,10 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
     @Override
     public List<RoomVo> getRoomsWithNurByFloorId(Long floorId) {
         return roomMapper.selectByFloorIdWithNur(floorId);
+    }
+
+    @Override
+    public RoomVo one(Long id) {
+        return roomMapper.one(id);
     }
 }

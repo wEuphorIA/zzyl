@@ -89,4 +89,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         group by f.id
         order by code, create_time desc
     </select>
+
+    <resultMap id="TreeVoResult" type="com.zzyl.nursing.vo.TreeVo">
+        <id column="fid" property="value"/>
+        <result column="fname" property="label"/>
+        <collection property="children" ofType="com.zzyl.nursing.vo.TreeVo">
+            <id column="rid" property="value"/>
+            <result column="code" property="label"/>
+            <collection property="children" ofType="com.zzyl.nursing.vo.TreeVo">
+                <id column="bid" property="value"/>
+                <result column="bnumber" property="label"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getRoomAndBedByBedStatus" resultMap="TreeVoResult">
+        select f.id fid,f.name fname,
+            r.code code,r.id rid,
+            b.id bid,b.bed_number bnumber
+        from floor f
+        left join room r on f.id = r.floor_id
+        left join bed b on r.id = b.room_id
+        where b.bed_status = #{status}
+        order by f.id, r.id, b.id
+    </select>
 </mapper>

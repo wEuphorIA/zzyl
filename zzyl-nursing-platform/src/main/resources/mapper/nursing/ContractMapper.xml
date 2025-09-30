@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.ContractMapper">
+    
+    <resultMap type="Contract" id="ContractResult">
+        <result property="id"    column="id"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="contractNumber"    column="contract_number"    />
+        <result property="agreementPath"    column="agreement_path"    />
+        <result property="thirdPartyPhone"    column="third_party_phone"    />
+        <result property="thirdPartyName"    column="third_party_name"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="status"    column="status"    />
+        <result property="signDate"    column="sign_date"    />
+        <result property="terminationSubmitter"    column="termination_submitter"    />
+        <result property="terminationDate"    column="termination_date"    />
+        <result property="terminationAgreementPath"    column="termination_agreement_path"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectContractVo">
+        select id, elder_id, contract_name, contract_number, agreement_path, third_party_phone, third_party_name, elder_name, start_date, end_date, status, sign_date, termination_submitter, termination_date, termination_agreement_path, sort_order, create_time, update_time, create_by, update_by, remark from contract
+    </sql>
+
+    <select id="selectContractList" parameterType="Contract" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        <where>  
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="contractNumber != null  and contractNumber != ''"> and contract_number = #{contractNumber}</if>
+            <if test="agreementPath != null  and agreementPath != ''"> and agreement_path = #{agreementPath}</if>
+            <if test="thirdPartyPhone != null  and thirdPartyPhone != ''"> and third_party_phone = #{thirdPartyPhone}</if>
+            <if test="thirdPartyName != null  and thirdPartyName != ''"> and third_party_name like concat('%', #{thirdPartyName}, '%')</if>
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="signDate != null "> and sign_date = #{signDate}</if>
+            <if test="terminationSubmitter != null  and terminationSubmitter != ''"> and termination_submitter = #{terminationSubmitter}</if>
+            <if test="terminationDate != null "> and termination_date = #{terminationDate}</if>
+            <if test="terminationAgreementPath != null  and terminationAgreementPath != ''"> and termination_agreement_path = #{terminationAgreementPath}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        </where>
+    </select>
+    
+    <select id="selectContractById" parameterType="Long" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertContract" parameterType="Contract" useGeneratedKeys="true" keyProperty="id">
+        insert into contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderId != null">elder_id,</if>
+            <if test="contractName != null and contractName != ''">contract_name,</if>
+            <if test="contractNumber != null and contractNumber != ''">contract_number,</if>
+            <if test="agreementPath != null and agreementPath != ''">agreement_path,</if>
+            <if test="thirdPartyPhone != null and thirdPartyPhone != ''">third_party_phone,</if>
+            <if test="thirdPartyName != null and thirdPartyName != ''">third_party_name,</if>
+            <if test="elderName != null and elderName != ''">elder_name,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="status != null">status,</if>
+            <if test="signDate != null">sign_date,</if>
+            <if test="terminationSubmitter != null">termination_submitter,</if>
+            <if test="terminationDate != null">termination_date,</if>
+            <if test="terminationAgreementPath != null">termination_agreement_path,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderId != null">#{elderId},</if>
+            <if test="contractName != null and contractName != ''">#{contractName},</if>
+            <if test="contractNumber != null and contractNumber != ''">#{contractNumber},</if>
+            <if test="agreementPath != null and agreementPath != ''">#{agreementPath},</if>
+            <if test="thirdPartyPhone != null and thirdPartyPhone != ''">#{thirdPartyPhone},</if>
+            <if test="thirdPartyName != null and thirdPartyName != ''">#{thirdPartyName},</if>
+            <if test="elderName != null and elderName != ''">#{elderName},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="signDate != null">#{signDate},</if>
+            <if test="terminationSubmitter != null">#{terminationSubmitter},</if>
+            <if test="terminationDate != null">#{terminationDate},</if>
+            <if test="terminationAgreementPath != null">#{terminationAgreementPath},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContract" parameterType="Contract">
+        update contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="contractName != null and contractName != ''">contract_name = #{contractName},</if>
+            <if test="contractNumber != null and contractNumber != ''">contract_number = #{contractNumber},</if>
+            <if test="agreementPath != null and agreementPath != ''">agreement_path = #{agreementPath},</if>
+            <if test="thirdPartyPhone != null and thirdPartyPhone != ''">third_party_phone = #{thirdPartyPhone},</if>
+            <if test="thirdPartyName != null and thirdPartyName != ''">third_party_name = #{thirdPartyName},</if>
+            <if test="elderName != null and elderName != ''">elder_name = #{elderName},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="signDate != null">sign_date = #{signDate},</if>
+            <if test="terminationSubmitter != null">termination_submitter = #{terminationSubmitter},</if>
+            <if test="terminationDate != null">termination_date = #{terminationDate},</if>
+            <if test="terminationAgreementPath != null">termination_agreement_path = #{terminationAgreementPath},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContractById" parameterType="Long">
+        delete from contract where id = #{id}
+    </delete>
+
+    <delete id="deleteContractByIds" parameterType="String">
+        delete from contract where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
