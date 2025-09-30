@@ -12,6 +12,10 @@ import com.zzyl.nursing.domain.*;
 import com.zzyl.nursing.dto.CheckInApplyDto;
 import com.zzyl.nursing.mapper.*;
 import com.zzyl.nursing.util.CodeGenerator;
+import com.zzyl.nursing.vo.CheckInConfigVo;
+import com.zzyl.nursing.vo.CheckInDetailVo;
+import com.zzyl.nursing.vo.CheckInElderVo;
+import com.zzyl.nursing.vo.ElderFamilyVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,7 +122,7 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
                 .eq(Elder::getIdCardNo, checkInApplyDto.getCheckInElderDto().getIdCardNo())
                 .eq(Elder::getStatus, 1));
 
-        if (ObjectUtil.isNotNull(checkElder)){
+        if (ObjectUtil.isNotNull(checkElder)) {
             throw new RuntimeException("该老人已入住，不需要重复办理");
         }
 
@@ -128,7 +132,7 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
         bedMapper.updateBed(bed);
 
         Elder elder = new Elder();
-        BeanUtils.copyProperties(checkInApplyDto.getCheckInElderDto(),elder);
+        BeanUtils.copyProperties(checkInApplyDto.getCheckInElderDto(), elder);
         elder.setBedNumber(bed.getBedNumber());
         elder.setBedId(bed.getId());
 
@@ -136,25 +140,25 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
         Elder elderDb = elderMapper.selectOne(new LambdaQueryWrapper<Elder>()
                 .eq(Elder::getIdCardNo, checkInApplyDto.getCheckInElderDto().getIdCardNo())
                 .ne(Elder::getStatus, 1));
-        if (ObjectUtil.isNotNull(elderDb)){
+        if (ObjectUtil.isNotNull(elderDb)) {
             //修改
             elder.setId(elderDb.getId());
             elderMapper.updateElder(elder);
-        }else {
+        } else {
             //新增
             elderMapper.insert(elder);
         }
 
         // 新增签约办理
         Contract contract = new Contract();
-        BeanUtils.copyProperties(checkInApplyDto.getCheckInContractDto(),contract);
+        BeanUtils.copyProperties(checkInApplyDto.getCheckInContractDto(), contract);
         contract.setElderId(elder.getId().intValue());
         contract.setContractNumber("HT" + CodeGenerator.generateContractNumber());
         contract.setElderName(elder.getName());
         contract.setStartDate(checkInApplyDto.getCheckInConfigDto().getStartDate());
         contract.setEndDate(checkInApplyDto.getCheckInConfigDto().getEndDate());
         //如果当前时间在开始时间之后设置状态为1
-        if (LocalDateTime.now().isAfter(checkInApplyDto.getCheckInConfigDto().getStartDate())){
+        if (LocalDateTime.now().isAfter(checkInApplyDto.getCheckInConfigDto().getStartDate())) {
             contract.setStatus(1);
         }
         contractMapper.insert(contract);
@@ -174,9 +178,53 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
 
         // 新增入住配置
         CheckInConfig checkInConfig = new CheckInConfig();
-        BeanUtils.copyProperties(checkInApplyDto.getCheckInConfigDto(),checkInConfig);
+        BeanUtils.copyProperties(checkInApplyDto.getCheckInConfigDto(), checkInConfig);
         checkInConfig.setCheckInId(checkIn.getId());
         checkInConfigMapper.insert(checkInConfig);
 
     }
+
+    @Override
+    public CheckInDetailVo detail(Long id) {
+
+        CheckInDetailVo checkInDetailVo = new CheckInDetailVo();
+
+        // 查询入住信息// 查询入住配置
+        CheckIn checkIn = checkInMapper.selectById(id);
+        if (ObjectUtil.isNull(checkIn)) {
+            throw new RuntimeException("该老人不存在");
+        }
+        CheckInConfig checkInConfig = checkInConfigMapper.selectOne(
+                new LambdaQueryWrapper<CheckInConfig>()
+                        .eq(CheckInConfig::getCheckInId, id));
+
+        CheckInConfigVo checkInConfigVo = new CheckInConfigVo();
+        checkInConfigVo.setStartDate(checkIn.getStartDate());
+        checkInConfigVo.setEndDate(checkIn.getEndDate());
+        checkInConfigVo.setBedNumber(checkIn.getBedNumber());
+        BeanUtils.copyProperties(checkInConfig, checkInConfigVo);
+
+        // 查询老人信息
+        Elder elder = elderMapper.selectOne(new LambdaQueryWrapper<Elder>()
+                .eq(Elder::getId, checkIn.getElderId()));
+
+        CheckInElderVo checkInElderVo = new CheckInElderVo();
+        BeanUtils.copyProperties(elder, checkInElderVo);
+
+        // 查询合同
+        Contract contract = contractMapper.selectOne(
+                new LambdaQueryWrapper<Contract>()
+                        .eq(Contract::getElderId, checkIn.getElderId()));
+
+        // 转换家属列表
+        Object parse = JSON.parse(checkIn.getRemark());
+        List<ElderFamilyVo> elderFamilyVoList = JSON.parseArray(parse.toString(), ElderFamilyVo.class);
+        checkInDetailVo.setElderFamilyVoList(elderFamilyVoList);
+        // 整合数据返回
+        checkInDetailVo.setContract( contract);
+        checkInDetailVo.setCheckInConfigVo(checkInConfigVo);
+        checkInDetailVo.setCheckInElderVo(checkInElderVo);
+        return checkInDetailVo;
+    }
+
 }

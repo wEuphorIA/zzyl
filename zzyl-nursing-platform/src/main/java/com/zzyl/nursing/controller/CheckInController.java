@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zzyl.common.core.domain.R;
 import com.zzyl.nursing.dto.CheckInApplyDto;
+import com.zzyl.nursing.vo.CheckInDetailVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -115,4 +116,10 @@ public class CheckInController extends BaseController {
         return R.ok();
     }
 
+    @GetMapping("/detail/{id}")
+    @ApiOperation("查询入住详情")
+    public R<CheckInDetailVo> detail(@PathVariable("id") Long id){
+        CheckInDetailVo checkInDetailVo = checkInService.detail(id);
+        return R.ok(checkInDetailVo);
+    }
 }

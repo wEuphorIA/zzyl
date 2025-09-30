@@ -86,4 +86,7 @@ public class Elder extends BaseEntity
     @ApiModelProperty("床位id")
     private Long bedId;
 
+    @ApiModelProperty(value = "年龄")
+    private Integer age;
+
 }

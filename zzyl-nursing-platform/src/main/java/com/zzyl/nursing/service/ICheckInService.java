@@ -4,6 +4,7 @@ import java.util.List;
 import com.zzyl.nursing.domain.CheckIn;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzyl.nursing.dto.CheckInApplyDto;
+import com.zzyl.nursing.vo.CheckInDetailVo;
 
 /**
  * 入住Service接口
@@ -62,4 +63,6 @@ public interface ICheckInService extends IService<CheckIn>
     public int deleteCheckInById(Long id);
 
     void apply(CheckInApplyDto checkInApplyDto);
+
+    CheckInDetailVo detail(Long id);
 }
