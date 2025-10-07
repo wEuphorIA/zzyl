@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zzyl.common.core.domain.R;
+import com.zzyl.common.core.redis.RedisCache;
 import com.zzyl.nursing.vo.NursingProjectVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,95 +29,103 @@ import com.zzyl.common.utils.poi.ExcelUtil;
 import com.zzyl.common.core.page.TableDataInfo;
 
 /**
- * 护理项目Controller
- * 
- * @author alexis
- * @date 2024-12-30
- */
+ 护理项目Controller
+
+ @author alexis
+ @date 2024-12-30 */
 @Api(tags = "护理项目管理")
 @RestController
 @RequestMapping("/nursing/project")
-public class NursingProjectController extends BaseController
-{
+public class NursingProjectController extends BaseController {
     @Autowired
     private INursingProjectService nursingProjectService;
 
+    @Autowired
+    private RedisCache redisCache;
+
+    private static final String CACHE_KEY_PREFIX = "nursingProject:all";
+
     /**
-     * 查询护理项目列表
+     查询护理项目列表
      */
     @ApiOperation("查询护理项目列表")
     @PreAuthorize("@ss.hasPermi('nursing:project:list')")
     @GetMapping("/list")
-    public TableDataInfo<List<NursingProject>> list(@ApiParam("护理项目查询条件") NursingProject nursingProject)
-    {
+    public TableDataInfo<List<NursingProject>> list(@ApiParam("护理项目查询条件") NursingProject nursingProject) {
         startPage();
         List<NursingProject> list = nursingProjectService.selectNursingProjectList(nursingProject);
         return getDataTable(list);
     }
 
     /**
-     * 导出护理项目列表
+     导出护理项目列表
      */
     @ApiOperation("导出护理项目列表")
     @PreAuthorize("@ss.hasPermi('nursing:project:export')")
     @Log(title = "护理项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(@ApiParam(value = "护理项目查询条件") HttpServletResponse response, NursingProject nursingProject)
-    {
+    public void export(@ApiParam(value = "护理项目查询条件") HttpServletResponse response, NursingProject nursingProject) {
         List<NursingProject> list = nursingProjectService.selectNursingProjectList(nursingProject);
         ExcelUtil<NursingProject> util = new ExcelUtil<NursingProject>(NursingProject.class);
         util.exportExcel(response, list, "护理项目数据");
     }
 
     /**
-     * 获取护理项目详细信息
+     获取护理项目详细信息
      */
     @ApiOperation("获取护理项目详细信息")
     @PreAuthorize("@ss.hasPermi('nursing:project:query')")
     @GetMapping(value = "/{id}")
-    public R<NursingProject> getInfo(@ApiParam("护理项目ID") @PathVariable("id") Long id)
-    {
+    public R<NursingProject> getInfo(@ApiParam("护理项目ID") @PathVariable("id") Long id) {
         return R.ok(nursingProjectService.selectNursingProjectById(id));
     }
 
     /**
-     * 新增护理项目
+     新增护理项目
      */
     @ApiOperation("新增护理项目")
     @PreAuthorize("@ss.hasPermi('nursing:project:add')")
     @Log(title = "护理项目", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@ApiParam("护理项目信息") @RequestBody NursingProject nursingProject)
-    {
+    public AjaxResult add(@ApiParam("护理项目信息") @RequestBody NursingProject nursingProject) {
+        redisCache.deleteObject(CACHE_KEY_PREFIX);
         return toAjax(nursingProjectService.insertNursingProject(nursingProject));
     }
 
     /**
-     * 修改护理项目
+     修改护理项目
      */
     @ApiOperation("修改护理项目")
     @PreAuthorize("@ss.hasPermi('nursing:project:edit')")
     @Log(title = "护理项目", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@ApiParam("护理项目信息") @RequestBody NursingProject nursingProject)
-    {
+    public AjaxResult edit(@ApiParam("护理项目信息") @RequestBody NursingProject nursingProject) {
+        redisCache.deleteObject(CACHE_KEY_PREFIX);
         return toAjax(nursingProjectService.updateNursingProject(nursingProject));
     }
 
     /**
-     * 删除护理项目
+     删除护理项目
      */
     @ApiOperation("删除护理项目")
     @PreAuthorize("@ss.hasPermi('nursing:project:remove')")
     @Log(title = "护理项目", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@ApiParam("护理项目ID数组") @PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@ApiParam("护理项目ID数组") @PathVariable Long[] ids) {
+
+        redisCache.deleteObject(CACHE_KEY_PREFIX);
         return toAjax(nursingProjectService.deleteNursingProjectByIds(ids));
     }
 
     @GetMapping("/all")
     public R<List<NursingProjectVo>> getAllProjects() {
-       return R.ok(nursingProjectService.getAllProjects());
+
+        List<NursingProjectVo> cache = redisCache.getCacheObject(CACHE_KEY_PREFIX);
+        if (cache != null) {
+            return R.ok(cache);
+        }
+        List<NursingProjectVo> result = nursingProjectService.getAllProjects();
+        redisCache.setCacheObject(CACHE_KEY_PREFIX, result);
+        return R.ok(result);
     }
 }

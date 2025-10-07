@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zzyl.common.core.domain.R;
+import com.zzyl.common.core.redis.RedisCache;
 import com.zzyl.nursing.dto.NursingPlanDto;
 import com.zzyl.nursing.vo.NursingPlanVo;
 import io.swagger.annotations.Api;
@@ -41,6 +42,11 @@ public class NursingPlanController extends BaseController
 {
     @Autowired
     private INursingPlanService nursingPlanService;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    private static final String CACHE_KEY_PREFIX = "nursingPlan:all";
 
     /**
      * 查询护理计划列表
@@ -89,6 +95,7 @@ public class NursingPlanController extends BaseController
     @PostMapping
     public AjaxResult add(@ApiParam("护理计划信息") @RequestBody NursingPlanDto nursingPlanDto)
     {
+        redisCache.deleteObject(CACHE_KEY_PREFIX);
         return toAjax(nursingPlanService.insertNursingPlan(nursingPlanDto));
     }
 
@@ -101,6 +108,7 @@ public class NursingPlanController extends BaseController
     @PutMapping
     public AjaxResult edit(@ApiParam("护理计划信息") @RequestBody NursingPlanDto nursingPlanDto)
     {
+        redisCache.deleteObject(CACHE_KEY_PREFIX);
         return toAjax(nursingPlanService.updateNursingPlan(nursingPlanDto));
     }
 
@@ -113,6 +121,7 @@ public class NursingPlanController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@ApiParam("护理计划ID数组") @PathVariable Long[] ids)
     {
+        redisCache.deleteObject(CACHE_KEY_PREFIX);
         return toAjax(nursingPlanService.deleteNursingPlanByIds(ids));
     }
 
@@ -123,6 +132,13 @@ public class NursingPlanController extends BaseController
     @ApiOperation(value = "获取所有护理计划")
     public R<List<NursingPlan>> listAll()
     {
-        return R.ok(nursingPlanService.getAllNursingPlans());
+        // 获取缓存
+        List<NursingPlan> cachedData = redisCache.getCacheObject(CACHE_KEY_PREFIX);
+        if (cachedData != null) {
+            return R.ok(cachedData);
+        }
+        List<NursingPlan> result = nursingPlanService.getAllNursingPlans();
+        redisCache.setCacheObject(CACHE_KEY_PREFIX, result);
+        return R.ok(result);
     }
 }

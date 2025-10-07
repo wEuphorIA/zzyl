@@ -9,6 +9,7 @@ import com.zzyl.nursing.vo.NursingLevelVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,100 +30,110 @@ import com.zzyl.common.utils.poi.ExcelUtil;
 import com.zzyl.common.core.page.TableDataInfo;
 
 /**
- * 护理等级Controller
- * 
- * @author alexis
- * @date 2024-12-30
- */
+ 护理等级Controller
+
+ @author alexis
+ @date 2024-12-30 */
 @Api(tags = "护理等级管理")
 @RestController
 @RequestMapping("/nursing/level")
-public class NursingLevelController extends BaseController
-{
+public class NursingLevelController extends BaseController {
     @Autowired
     private INursingLevelService nursingLevelService;
 
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    private static final String CACHE_KEY_PREFIX = "nursingLevel:all";
+
     /**
-     * 查询护理等级列表
+     查询护理等级列表
      */
     @ApiOperation("查询护理等级列表")
     @PreAuthorize("@ss.hasPermi('nursing:level:list')")
     @GetMapping("/list")
-    public TableDataInfo<List<NursingLevelVo>> list(@ApiParam("护理等级查询条件") NursingLevel nursingLevel)
-    {
+    public TableDataInfo<List<NursingLevelVo>> list(@ApiParam("护理等级查询条件") NursingLevel nursingLevel) {
         startPage();
         List<NursingLevelVo> list = nursingLevelService.selectNursingLevelVoList(nursingLevel);
         return getDataTable(list);
     }
 
     /**
-     * 导出护理等级列表
+     导出护理等级列表
      */
     @ApiOperation("导出护理等级列表")
     @PreAuthorize("@ss.hasPermi('nursing:level:export')")
     @Log(title = "护理等级", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(@ApiParam(value = "护理等级查询条件") HttpServletResponse response, NursingLevel nursingLevel)
-    {
+    public void export(@ApiParam(value = "护理等级查询条件") HttpServletResponse response, NursingLevel nursingLevel) {
         List<NursingLevel> list = nursingLevelService.selectNursingLevelList(nursingLevel);
         ExcelUtil<NursingLevel> util = new ExcelUtil<NursingLevel>(NursingLevel.class);
         util.exportExcel(response, list, "护理等级数据");
     }
 
     /**
-     * 获取护理等级详细信息
+     获取护理等级详细信息
      */
     @ApiOperation("获取护理等级详细信息")
     @PreAuthorize("@ss.hasPermi('nursing:level:query')")
     @GetMapping(value = "/{id}")
-    public R<NursingLevel> getInfo(@ApiParam("护理等级ID") @PathVariable("id") Long id)
-    {
+    public R<NursingLevel> getInfo(@ApiParam("护理等级ID") @PathVariable("id") Long id) {
         return R.ok(nursingLevelService.selectNursingLevelById(id));
     }
 
     /**
-     * 新增护理等级
+     新增护理等级
      */
     @ApiOperation("新增护理等级")
     @PreAuthorize("@ss.hasPermi('nursing:level:add')")
     @Log(title = "护理等级", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@ApiParam("护理等级信息") @RequestBody NursingLevel nursingLevel)
-    {
+    public AjaxResult add(@ApiParam("护理等级信息") @RequestBody NursingLevel nursingLevel) {
+        redisTemplate.delete(CACHE_KEY_PREFIX);
         return toAjax(nursingLevelService.insertNursingLevel(nursingLevel));
     }
 
     /**
-     * 修改护理等级
+     修改护理等级
      */
     @ApiOperation("修改护理等级")
     @PreAuthorize("@ss.hasPermi('nursing:level:edit')")
     @Log(title = "护理等级", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@ApiParam("护理等级信息") @RequestBody NursingLevel nursingLevel)
-    {
+    public AjaxResult edit(@ApiParam("护理等级信息") @RequestBody NursingLevel nursingLevel) {
+        redisTemplate.delete(CACHE_KEY_PREFIX);
         return toAjax(nursingLevelService.updateNursingLevel(nursingLevel));
     }
 
     /**
-     * 删除护理等级
+     删除护理等级
      */
     @ApiOperation("删除护理等级")
     @PreAuthorize("@ss.hasPermi('nursing:level:remove')")
     @Log(title = "护理等级", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@ApiParam("护理等级ID数组") @PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@ApiParam("护理等级ID数组") @PathVariable Long[] ids) {
+        // 删除缓存
+        redisTemplate.delete(CACHE_KEY_PREFIX);
         return toAjax(nursingLevelService.deleteNursingLevelByIds(ids));
     }
 
     /**
-     * 查询所有护理等级
+     查询所有护理等级
      */
     @GetMapping("/all")
     @ApiOperation(value = "获取所有护理计划")
-    public R<List<NursingLevel>> listAll()
-    {
-        return R.ok(nursingLevelService.lambdaQuery().eq(NursingLevel::getStatus, 1).list());
+    public R<List<NursingLevel>> listAll() {
+
+        // 从缓存中获取
+        List<NursingLevel> nursingLevels = (List<NursingLevel>) redisTemplate.opsForValue().get(CACHE_KEY_PREFIX);
+        if (nursingLevels != null) {
+            return R.ok(nursingLevels);
+        }
+        
+        // 没缓存 设置缓存
+        List<NursingLevel> list = nursingLevelService.lambdaQuery().eq(NursingLevel::getStatus, 1).list();
+        redisTemplate.opsForValue().set(CACHE_KEY_PREFIX, list);
+        return R.ok(list);
     }
 }
