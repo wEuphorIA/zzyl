@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.HealthAssessmentMapper">
+    
+    <resultMap type="HealthAssessment" id="HealthAssessmentResult">
+        <result property="id"    column="id"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="age"    column="age"    />
+        <result property="gender"    column="gender"    />
+        <result property="healthScore"    column="health_score"    />
+        <result property="riskLevel"    column="risk_level"    />
+        <result property="suggestionForAdmission"    column="suggestion_for_admission"    />
+        <result property="nursingLevelName"    column="nursing_level_name"    />
+        <result property="admissionStatus"    column="admission_status"    />
+        <result property="totalCheckDate"    column="total_check_date"    />
+        <result property="physicalExamInstitution"    column="physical_exam_institution"    />
+        <result property="physicalReportUrl"    column="physical_report_url"    />
+        <result property="assessmentTime"    column="assessment_time"    />
+        <result property="reportSummary"    column="report_summary"    />
+        <result property="diseaseRisk"    column="disease_risk"    />
+        <result property="abnormalAnalysis"    column="abnormal_analysis"    />
+        <result property="systemScore"    column="system_score"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHealthAssessmentVo">
+        select id, elder_name, id_card, birth_date, age, gender, health_score, risk_level, suggestion_for_admission, nursing_level_name, admission_status, total_check_date, physical_exam_institution, physical_report_url, assessment_time, report_summary, disease_risk, abnormal_analysis, system_score, create_by, create_time, update_by, update_time, remark from health_assessment
+    </sql>
+
+    <select id="selectHealthAssessmentList" parameterType="HealthAssessment" resultMap="HealthAssessmentResult">
+        <include refid="selectHealthAssessmentVo"/>
+        <where>  
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="birthDate != null "> and birth_date = #{birthDate}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="healthScore != null  and healthScore != ''"> and health_score = #{healthScore}</if>
+            <if test="riskLevel != null  and riskLevel != ''"> and risk_level = #{riskLevel}</if>
+            <if test="suggestionForAdmission != null "> and suggestion_for_admission = #{suggestionForAdmission}</if>
+            <if test="nursingLevelName != null  and nursingLevelName != ''"> and nursing_level_name like concat('%', #{nursingLevelName}, '%')</if>
+            <if test="admissionStatus != null "> and admission_status = #{admissionStatus}</if>
+            <if test="totalCheckDate != null  and totalCheckDate != ''"> and total_check_date = #{totalCheckDate}</if>
+            <if test="physicalExamInstitution != null  and physicalExamInstitution != ''"> and physical_exam_institution = #{physicalExamInstitution}</if>
+            <if test="physicalReportUrl != null  and physicalReportUrl != ''"> and physical_report_url = #{physicalReportUrl}</if>
+            <if test="assessmentTime != null "> and assessment_time = #{assessmentTime}</if>
+            <if test="reportSummary != null  and reportSummary != ''"> and report_summary = #{reportSummary}</if>
+            <if test="diseaseRisk != null  and diseaseRisk != ''"> and disease_risk = #{diseaseRisk}</if>
+            <if test="abnormalAnalysis != null  and abnormalAnalysis != ''"> and abnormal_analysis = #{abnormalAnalysis}</if>
+            <if test="systemScore != null  and systemScore != ''"> and system_score = #{systemScore}</if>
+        </where>
+    </select>
+    
+    <select id="selectHealthAssessmentById" parameterType="Long" resultMap="HealthAssessmentResult">
+        <include refid="selectHealthAssessmentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHealthAssessment" parameterType="HealthAssessment" useGeneratedKeys="true" keyProperty="id">
+        insert into health_assessment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderName != null">elder_name,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="birthDate != null">birth_date,</if>
+            <if test="age != null">age,</if>
+            <if test="gender != null">gender,</if>
+            <if test="healthScore != null">health_score,</if>
+            <if test="riskLevel != null">risk_level,</if>
+            <if test="suggestionForAdmission != null">suggestion_for_admission,</if>
+            <if test="nursingLevelName != null">nursing_level_name,</if>
+            <if test="admissionStatus != null">admission_status,</if>
+            <if test="totalCheckDate != null">total_check_date,</if>
+            <if test="physicalExamInstitution != null">physical_exam_institution,</if>
+            <if test="physicalReportUrl != null">physical_report_url,</if>
+            <if test="assessmentTime != null">assessment_time,</if>
+            <if test="reportSummary != null">report_summary,</if>
+            <if test="diseaseRisk != null">disease_risk,</if>
+            <if test="abnormalAnalysis != null">abnormal_analysis,</if>
+            <if test="systemScore != null">system_score,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderName != null">#{elderName},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="birthDate != null">#{birthDate},</if>
+            <if test="age != null">#{age},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="healthScore != null">#{healthScore},</if>
+            <if test="riskLevel != null">#{riskLevel},</if>
+            <if test="suggestionForAdmission != null">#{suggestionForAdmission},</if>
+            <if test="nursingLevelName != null">#{nursingLevelName},</if>
+            <if test="admissionStatus != null">#{admissionStatus},</if>
+            <if test="totalCheckDate != null">#{totalCheckDate},</if>
+            <if test="physicalExamInstitution != null">#{physicalExamInstitution},</if>
+            <if test="physicalReportUrl != null">#{physicalReportUrl},</if>
+            <if test="assessmentTime != null">#{assessmentTime},</if>
+            <if test="reportSummary != null">#{reportSummary},</if>
+            <if test="diseaseRisk != null">#{diseaseRisk},</if>
+            <if test="abnormalAnalysis != null">#{abnormalAnalysis},</if>
+            <if test="systemScore != null">#{systemScore},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHealthAssessment" parameterType="HealthAssessment">
+        update health_assessment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderName != null">elder_name = #{elderName},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="healthScore != null">health_score = #{healthScore},</if>
+            <if test="riskLevel != null">risk_level = #{riskLevel},</if>
+            <if test="suggestionForAdmission != null">suggestion_for_admission = #{suggestionForAdmission},</if>
+            <if test="nursingLevelName != null">nursing_level_name = #{nursingLevelName},</if>
+            <if test="admissionStatus != null">admission_status = #{admissionStatus},</if>
+            <if test="totalCheckDate != null">total_check_date = #{totalCheckDate},</if>
+            <if test="physicalExamInstitution != null">physical_exam_institution = #{physicalExamInstitution},</if>
+            <if test="physicalReportUrl != null">physical_report_url = #{physicalReportUrl},</if>
+            <if test="assessmentTime != null">assessment_time = #{assessmentTime},</if>
+            <if test="reportSummary != null">report_summary = #{reportSummary},</if>
+            <if test="diseaseRisk != null">disease_risk = #{diseaseRisk},</if>
+            <if test="abnormalAnalysis != null">abnormal_analysis = #{abnormalAnalysis},</if>
+            <if test="systemScore != null">system_score = #{systemScore},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHealthAssessmentById" parameterType="Long">
+        delete from health_assessment where id = #{id}
+    </delete>
+
+    <delete id="deleteHealthAssessmentByIds" parameterType="String">
+        delete from health_assessment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
