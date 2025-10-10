@@ -33,6 +33,7 @@ server:
 
 # 日志配置
 logging:
+  config: classpath:logback-logstash.xml
   level:
     com.zzyl: debug
     org.springframework: warn
