@@ -48,3 +48,5 @@ nbdist/
 
 zzyl-ui/
 
+zzyl-admin/src/main/resources/application-secret.yml
+
