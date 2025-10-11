@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectFamilyMemberList" parameterType="FamilyMember" resultMap="FamilyMemberResult">
         <include refid="selectFamilyMemberVo"/>
-        <where>  
+        <where>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
