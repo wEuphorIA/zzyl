@@ -33,7 +33,7 @@ server:
 
 # 日志配置
 logging:
-  config: classpath:logback-logstash.xml
+  config: classpath:logback.xml
   level:
     com.zzyl: debug
     org.springframework: warn
@@ -48,6 +48,9 @@ user:
 
 # Spring配置
 spring:
+  config:
+    import:
+      - classpath:application-secret.yml
   # 资源信息
   messages:
     # 国际化资源文件路径

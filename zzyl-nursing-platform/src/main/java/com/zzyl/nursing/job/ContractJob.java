@@ -26,7 +26,6 @@ public class ContractJob {
 
     @Scheduled(cron = "0 * * * * ?")
     public void updateContractStatusJob() {
-        System.out.println("kaishi");
         // 把状态为0的全部都扫出来
         LambdaQueryWrapper<Contract> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Contract::getStatus, 0)

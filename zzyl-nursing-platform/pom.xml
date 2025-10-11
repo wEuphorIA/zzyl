@@ -27,6 +27,11 @@
             <groupId>com.zzyl</groupId>
             <artifactId>zzyl-oss</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.zzyl</groupId>
+            <artifactId>zzyl-framework</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

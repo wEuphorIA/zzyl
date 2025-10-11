@@ -174,7 +174,7 @@ public class TokenService
      * @param claims 数据声明
      * @return 令牌
      */
-    private String createToken(Map<String, Object> claims)
+    public String createToken(Map<String, Object> claims)
     {
         String token = Jwts.builder()
                 .setClaims(claims)
@@ -188,7 +188,7 @@ public class TokenService
      * @param token 令牌
      * @return 数据声明
      */
-    private Claims parseToken(String token)
+    public Claims parseToken(String token)
     {
         return Jwts.parser()
                 .setSigningKey(secret)

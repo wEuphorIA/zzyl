@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.FamilyMemberMapper">
+    
+    <resultMap type="FamilyMember" id="FamilyMemberResult">
+        <result property="id"    column="id"    />
+        <result property="phone"    column="phone"    />
+        <result property="name"    column="name"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="openId"    column="open_id"    />
+        <result property="gender"    column="gender"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFamilyMemberVo">
+        select id, phone, name, avatar, open_id, gender, create_time, update_time, create_by, update_by, remark from family_member
+    </sql>
+
+    <select id="selectFamilyMemberList" parameterType="FamilyMember" resultMap="FamilyMemberResult">
+        <include refid="selectFamilyMemberVo"/>
+        <where>  
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+        </where>
+    </select>
+    
+    <select id="selectFamilyMemberById" parameterType="Long" resultMap="FamilyMemberResult">
+        <include refid="selectFamilyMemberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFamilyMember" parameterType="FamilyMember" useGeneratedKeys="true" keyProperty="id">
+        insert into family_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="name != null">name,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="openId != null">open_id,</if>
+            <if test="gender != null">gender,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="name != null">#{name},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFamilyMember" parameterType="FamilyMember">
+        update family_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="openId != null">open_id = #{openId},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFamilyMemberById" parameterType="Long">
+        delete from family_member where id = #{id}
+    </delete>
+
+    <delete id="deleteFamilyMemberByIds" parameterType="String">
+        delete from family_member where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
