@@ -18,6 +18,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.baidubce</groupId>
             <artifactId>qianfan</artifactId>
             <version>0.1.1</version>
