@@ -9,6 +9,9 @@ import lombok.SneakyThrows;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -21,11 +24,20 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @SneakyThrows
     public boolean isExclude() {
-        String requestURI = request.getRequestURI();
-        if(requestURI.startsWith("/member")) {
-            return true;
+        try {
+            RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+            if (requestAttributes instanceof ServletRequestAttributes) {
+                HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+                String requestURI = request.getRequestURI();
+                if(requestURI.startsWith("/member")) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (IllegalStateException e) {
+            // 在非Web请求环境中返回false
+            return false;
         }
-        return false;
     }
 
     // 插入数据时自动填充
