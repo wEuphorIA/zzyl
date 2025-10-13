@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.DeviceMapper">
+
+    <resultMap type="Device" id="DeviceResult">
+        <result property="id"    column="id"    />
+        <result property="iotId"    column="iot_id"    />
+        <result property="secret"    column="secret"    />
+        <result property="bindingLocation"    column="binding_location"    />
+        <result property="locationType"    column="location_type"    />
+        <result property="physicalLocationType"    column="physical_location_type"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="productKey"    column="product_key"    />
+        <result property="productName"    column="product_name"    />
+        <result property="deviceDescription"    column="device_description"    />
+        <result property="haveEntranceGuard"    column="have_entrance_guard"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="nodeId"    column="node_id"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDeviceVo">
+        select id, iot_id, secret, binding_location, location_type, physical_location_type, device_name, product_key, product_name, device_description, have_entrance_guard, create_time, update_time, create_by, node_id, update_by, remark from device
+    </sql>
+
+    <select id="selectDeviceList" parameterType="Device" resultMap="DeviceResult">
+        <include refid="selectDeviceVo"/>
+        <where>
+            <if test="iotId != null  and iotId != ''"> and iot_id = #{iotId}</if>
+            <if test="secret != null  and secret != ''"> and secret = #{secret}</if>
+            <if test="bindingLocation != null  and bindingLocation != ''"> and binding_location = #{bindingLocation}</if>
+            <if test="locationType != null "> and location_type = #{locationType}</if>
+            <if test="physicalLocationType != null "> and physical_location_type = #{physicalLocationType}</if>
+            <if test="deviceName != null  and deviceName != ''"> and device_name like concat('%', #{deviceName}, '%')</if>
+            <if test="productKey != null  and productKey != ''"> and product_key = #{productKey}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="deviceDescription != null  and deviceDescription != ''"> and device_description = #{deviceDescription}</if>
+            <if test="haveEntranceGuard != null "> and have_entrance_guard = #{haveEntranceGuard}</if>
+            <if test="nodeId != null  and nodeId != ''"> and node_id = #{nodeId}</if>
+        </where>
+    </select>
+
+    <select id="selectDeviceById" parameterType="Long" resultMap="DeviceResult">
+        <include refid="selectDeviceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDevice" parameterType="Device" useGeneratedKeys="true" keyProperty="id">
+        insert into device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="iotId != null">iot_id,</if>
+            <if test="secret != null">secret,</if>
+            <if test="bindingLocation != null">binding_location,</if>
+            <if test="locationType != null">location_type,</if>
+            <if test="physicalLocationType != null">physical_location_type,</if>
+            <if test="deviceName != null">device_name,</if>
+            <if test="productKey != null">product_key,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="deviceDescription != null">device_description,</if>
+            <if test="haveEntranceGuard != null">have_entrance_guard,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="nodeId != null">node_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="iotId != null">#{iotId},</if>
+            <if test="secret != null">#{secret},</if>
+            <if test="bindingLocation != null">#{bindingLocation},</if>
+            <if test="locationType != null">#{locationType},</if>
+            <if test="physicalLocationType != null">#{physicalLocationType},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="productKey != null">#{productKey},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="deviceDescription != null">#{deviceDescription},</if>
+            <if test="haveEntranceGuard != null">#{haveEntranceGuard},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="nodeId != null">#{nodeId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDevice" parameterType="Device">
+        update device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="iotId != null">iot_id = #{iotId},</if>
+            <if test="secret != null">secret = #{secret},</if>
+            <if test="bindingLocation != null">binding_location = #{bindingLocation},</if>
+            <if test="locationType != null">location_type = #{locationType},</if>
+            <if test="physicalLocationType != null">physical_location_type = #{physicalLocationType},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="productKey != null">product_key = #{productKey},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="deviceDescription != null">device_description = #{deviceDescription},</if>
+            <if test="haveEntranceGuard != null">have_entrance_guard = #{haveEntranceGuard},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="nodeId != null">node_id = #{nodeId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDeviceById" parameterType="Long">
+        delete from device where id = #{id}
+    </delete>
+
+    <delete id="deleteDeviceByIds" parameterType="String">
+        delete from device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
