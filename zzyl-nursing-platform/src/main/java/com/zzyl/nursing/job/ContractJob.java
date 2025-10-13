@@ -24,7 +24,7 @@ public class ContractJob {
     @Resource
     private IContractService contractService;
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 1,31 * * * ?")
     public void updateContractStatusJob() {
         // 把状态为0的全部都扫出来
         LambdaQueryWrapper<Contract> lambdaQueryWrapper = new LambdaQueryWrapper<>();
