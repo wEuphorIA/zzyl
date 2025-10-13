@@ -75,4 +75,8 @@ public interface IDeviceService extends IService<Device>
     DeviceDetailVo getInfo(String iotId);
 
     List<DeviceVo> queryServiceProperties(String iotId);
+
+    void update(DeviceDto deviceDto);
+
+    void delete(String iotId);
 }

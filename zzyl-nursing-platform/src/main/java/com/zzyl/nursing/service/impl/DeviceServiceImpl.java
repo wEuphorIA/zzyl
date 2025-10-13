@@ -16,6 +16,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.huaweicloud.sdk.iotda.v5.IoTDAClient;
 import com.huaweicloud.sdk.iotda.v5.model.*;
 import com.zzyl.common.core.domain.AjaxResult;
@@ -298,5 +299,37 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         });
 
         return deviceList;
+    }
+
+    @Override
+    public void update(DeviceDto deviceDto) {
+
+        Device device = BeanUtil.toBean(deviceDto, Device.class);
+
+        if (deviceDto.getLocationType() == 0) {
+            device.setPhysicalLocationType(-1);
+        }
+
+        updateById(device);
+
+        UpdateDeviceRequest request = new UpdateDeviceRequest();
+        request.withDeviceId(deviceDto.getIotId());
+        UpdateDevice body = new UpdateDevice();
+        body.withDeviceName(deviceDto.getDeviceName());
+        request.withBody(body);
+        client.updateDevice(request);
+    }
+
+
+    @Override
+    public void delete(String iotId) {
+        LambdaQueryWrapper<Device> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Device::getIotId, iotId);
+        deviceMapper.delete(queryWrapper);
+
+        DeleteDeviceRequest request = new DeleteDeviceRequest();
+        request.withDeviceId(iotId);
+
+        client.deleteDevice(request);
     }
 }

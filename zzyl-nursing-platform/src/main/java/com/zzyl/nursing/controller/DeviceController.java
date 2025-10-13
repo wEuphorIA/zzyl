@@ -10,12 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.zzyl.common.core.controller.BaseController;
 import com.zzyl.common.core.domain.AjaxResult;
 import com.zzyl.nursing.domain.Device;
@@ -80,4 +75,19 @@ public class DeviceController extends BaseController {
     public R<List<DeviceVo>> queryServiceProperties(@PathVariable String iotId){
         return R.ok(deviceService.queryServiceProperties(iotId));
     }
+
+    @PutMapping
+    @ApiOperation(value = "修改设备数据")
+    public AjaxResult update(@RequestBody DeviceDto deviceDto){
+        deviceService.update(deviceDto);
+        return success();
+    }
+
+    @DeleteMapping("/{iotId}")
+    @ApiOperation("删除设备")
+    public AjaxResult delete(@PathVariable String iotId){
+        deviceService.delete(iotId);
+        return success();
+    }
+
 }

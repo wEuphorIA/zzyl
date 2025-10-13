@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zzyl.common.core.domain.R;
 import com.zzyl.nursing.dto.UserLoginRequestDto;
+import com.zzyl.nursing.service.IDeviceService;
+import com.zzyl.nursing.vo.DeviceVo;
 import com.zzyl.nursing.vo.LoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,23 +31,31 @@ import com.zzyl.common.utils.poi.ExcelUtil;
 import com.zzyl.common.core.page.TableDataInfo;
 
 /**
- * 老人家属Controller
- * 
- * @author Euphoria
- * @date 2025-10-11
- */
+ 老人家属Controller
+
+ @author Euphoria
+ @date 2025-10-11 */
 @Api(tags = "老人家属管理")
 @RestController
 @RequestMapping("/member/user")
-public class FamilyMemberController extends BaseController
-{
+public class FamilyMemberController extends BaseController {
+
     @Autowired
     private IFamilyMemberService familyMemberService;
 
+    @Autowired
+    private IDeviceService deviceService;
+
     @PostMapping("/login")
     @ApiOperation("登录")
-    public AjaxResult login(@RequestBody UserLoginRequestDto loginRequestDto){
-       LoginVo loginVo = familyMemberService.login(loginRequestDto);
-       return success(loginVo);
+    public AjaxResult login(@RequestBody UserLoginRequestDto loginRequestDto) {
+        LoginVo loginVo = familyMemberService.login(loginRequestDto);
+        return success(loginVo);
+    }
+
+    @GetMapping("/queryServiceProperties/{iotId}")
+    @ApiOperation("查询健康数据")
+    public R<List<DeviceVo>> queryServiceProperties(@PathVariable String iotId) {
+        return R.ok(deviceService.queryServiceProperties(iotId));
     }
 }
