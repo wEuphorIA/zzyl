@@ -47,6 +47,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         // this.strictInsertFill(metaObject, "createTime", Date.class, DateUtils.getNowDate());
         if(!isExclude()) {
             this.strictInsertFill(metaObject, "createBy", String.class, getLoginUserId() + "");
+            this.strictInsertFill(metaObject, "createTime", Date.class, DateUtils.getNowDate());
         }
     }
 
@@ -59,6 +60,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 // //        this.strictUpdateFill(metaObject, "updateTime", Date.class, DateUtils.getNowDate());
         if(!isExclude()) {
             this.setFieldValByName("updateBy", getLoginUserId() + "", metaObject);
+            this.strictUpdateFill(metaObject, "updateTime", Date.class, DateUtils.getNowDate());
         }
     }
 

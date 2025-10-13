@@ -2,9 +2,13 @@ package com.zzyl.nursing.service;
 
 import java.util.List;
 
-import com.huaweicloud.sdk.iotda.v5.model.ProductSummary;
+import com.zzyl.common.core.domain.AjaxResult;
 import com.zzyl.nursing.domain.Device;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.dto.DeviceDto;
+import com.zzyl.nursing.vo.DeviceDetailVo;
+import com.zzyl.nursing.vo.DeviceVo;
+import com.zzyl.nursing.vo.ProductVo;
 
 /**
  * 设备Service接口
@@ -64,5 +68,11 @@ public interface IDeviceService extends IService<Device>
 
     void syncProductList();
 
-    List<ProductSummary> allProduct();
+    List<ProductVo> allProduct();
+
+    void register(DeviceDto deviceDto);
+
+    DeviceDetailVo getInfo(String iotId);
+
+    List<DeviceVo> queryServiceProperties(String iotId);
 }
