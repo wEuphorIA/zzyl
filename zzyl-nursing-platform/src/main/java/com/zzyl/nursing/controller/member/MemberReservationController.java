@@ -109,8 +109,6 @@ public class MemberReservationController extends BaseController {
     public AjaxResult cancel(@ApiParam("预约id") @PathVariable Long id) {
         Long userId = UserThreadLocal.getUserId();
         System.out.println(redisTemplate.opsForValue().increment(String.format("%s:%d", KEY_PREFIX, userId), 1));
-        Integer i = redisTemplate.opsForValue().get(String.format("%s:%d", KEY_PREFIX, userId));
-        i++;
         Reservation reservation = reservationService.selectReservationById(id);
         reservation.setStatus(2);
         reservation.setUpdateBy(UserThreadLocal.getUserId().toString());

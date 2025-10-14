@@ -12,8 +12,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 
 
-
-
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -306,8 +305,35 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
         Device device = BeanUtil.toBean(deviceDto, Device.class);
 
+        if(ObjectUtil.isEmpty(device)) {
+            throw new BaseException("设备不存在");
+        }
+
+        //判断设备名称是否重复
+        Long count = lambdaQuery()
+                .eq(Device::getDeviceName, deviceDto.getDeviceName())
+                .ne(Device::getId, device.getId())
+                .count();
+
+        if (count > 0){
+            throw new BaseException("设备名称已存在");
+        }
+
         if (deviceDto.getLocationType() == 0) {
             device.setPhysicalLocationType(-1);
+        }
+
+        //判断接入位置是否重复
+        count = lambdaQuery()
+                .eq(Device::getBindingLocation, deviceDto.getBindingLocation())
+                .eq(Device::getLocationType, device.getLocationType())
+                .eq(Device::getPhysicalLocationType, device.getPhysicalLocationType())
+                .eq(Device::getProductKey, device.getProductKey())
+                .ne(Device::getId, device.getId())
+                .count();
+
+        if (count > 0){
+            throw new BaseException("接入位置已存在");
         }
 
         updateById(device);

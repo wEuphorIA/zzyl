@@ -1,13 +1,29 @@
 package com.zzyl.nursing.service.impl;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.zzyl.common.exception.base.BaseException;
 import com.zzyl.common.utils.StringUtils;
+import com.zzyl.common.utils.UserThreadLocal;
 import com.zzyl.framework.web.service.TokenService;
+import com.zzyl.nursing.domain.Elder;
+import com.zzyl.nursing.domain.FamilyMemberElder;
+import com.zzyl.nursing.dto.FamilyMemberDto;
 import com.zzyl.nursing.dto.UserLoginRequestDto;
+import com.zzyl.nursing.mapper.DeviceDataMapper;
+import com.zzyl.nursing.mapper.FamilyMemberElderMapper;
+import com.zzyl.nursing.mq.vo.HourlyDataVo;
+import com.zzyl.nursing.service.IElderService;
 import com.zzyl.nursing.service.WechatService;
+import com.zzyl.nursing.vo.FamilyMemberPageVo;
+import com.zzyl.nursing.vo.FamilyMemberVo;
 import com.zzyl.nursing.vo.LoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +32,7 @@ import com.zzyl.nursing.mapper.FamilyMemberMapper;
 import com.zzyl.nursing.domain.FamilyMember;
 import com.zzyl.nursing.service.IFamilyMemberService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -35,6 +52,16 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
 
     @Resource
     private TokenService tokenService;
+
+    @Resource
+    private IElderService elderService;
+
+    @Resource
+    private FamilyMemberElderMapper familyMemberElderMapper;
+
+    @Resource
+    private DeviceDataMapper deviceDataMapper;
+
 
     static List<String> DEFAULT_NICKNAME_PREFIX = ListUtil.of(
             "生活更美好",
@@ -122,7 +149,7 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
 
         //根据openid查询用户信息
         LambdaQueryWrapper<FamilyMember> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(FamilyMember::getOpenId,openid);
+        queryWrapper.eq(FamilyMember::getOpenId, openid);
         FamilyMember familyMember = familyMemberMapper.selectOne(queryWrapper);
 
         if (Objects.isNull(familyMember)) {
@@ -151,5 +178,62 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
                 .token(token)
                 .nickName(familyMember.getName())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void add(FamilyMemberDto familyMemberDto) {
+        // 1. 先去查数据中有没有对应的老人
+        Elder elder = elderService.lambdaQuery().eq(Elder::getIdCardNo, familyMemberDto.getIdCard()).eq(Elder::getName, familyMemberDto.getName()).one();
+
+        if (Objects.isNull(elder)) {
+            throw new BaseException("没有该老人");
+        }
+
+        FamilyMemberElder familyMemberElder = new FamilyMemberElder();
+        familyMemberElder.setElderId(elder.getId());
+        familyMemberElder.setFamilyMemberId(UserThreadLocal.getUserId());
+        familyMemberElder.setRemark(familyMemberDto.getRemark());
+        familyMemberElder.setCreateTime(new Date());
+        familyMemberElderMapper.insert(familyMemberElder);
+
+    }
+
+    @Override
+    public List<FamilyMemberVo> my() {
+        return familyMemberElderMapper.my(UserThreadLocal.getUserId());
+    }
+
+    @Override
+    public List<FamilyMemberPageVo> listByPage() {
+        return familyMemberElderMapper.listByPage(UserThreadLocal.getUserId());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        familyMemberElderMapper.deleteById(id);
+    }
+
+    @Override
+    public List<HourlyDataVo> queryDeviceDataListByDay(String iotId, String startTime, String endTime, String functionId) {
+
+        Instant instant = Instant.ofEpochMilli(Long.parseLong(startTime));
+        LocalDateTime start = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+        instant = Instant.ofEpochMilli(Long.parseLong(endTime));
+        LocalDateTime end = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+        return deviceDataMapper.queryDeviceDataListByDay(iotId,start,end,functionId);
+    }
+
+    @Override
+    public List<HourlyDataVo> queryDeviceDataListByWeek(String iotId, String startTime, String endTime, String functionId) {
+        Instant instant = Instant.ofEpochMilli(Long.parseLong(startTime));
+        LocalDateTime start = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+        instant = Instant.ofEpochMilli(Long.parseLong(endTime));
+        LocalDateTime end = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+        return deviceDataMapper.queryDeviceDataListByWeek(iotId,start,end,functionId);
     }
 }

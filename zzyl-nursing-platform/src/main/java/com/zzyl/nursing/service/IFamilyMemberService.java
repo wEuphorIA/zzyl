@@ -3,7 +3,11 @@ package com.zzyl.nursing.service;
 import java.util.List;
 import com.zzyl.nursing.domain.FamilyMember;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.dto.FamilyMemberDto;
 import com.zzyl.nursing.dto.UserLoginRequestDto;
+import com.zzyl.nursing.mq.vo.HourlyDataVo;
+import com.zzyl.nursing.vo.FamilyMemberPageVo;
+import com.zzyl.nursing.vo.FamilyMemberVo;
 import com.zzyl.nursing.vo.LoginVo;
 
 /**
@@ -63,4 +67,16 @@ public interface IFamilyMemberService extends IService<FamilyMember>
     public int deleteFamilyMemberById(Long id);
 
     LoginVo login(UserLoginRequestDto loginRequestDto);
+
+    void add(FamilyMemberDto familyMemberDto);
+
+    List<FamilyMemberVo> my();
+
+    List<FamilyMemberPageVo> listByPage();
+
+    void deleteById(Long id);
+
+    List<HourlyDataVo> queryDeviceDataListByDay(String iotId, String startTime, String endTime, String functionId);
+
+    List<HourlyDataVo> queryDeviceDataListByWeek(String iotId, String startTime, String endTime, String functionId);
 }

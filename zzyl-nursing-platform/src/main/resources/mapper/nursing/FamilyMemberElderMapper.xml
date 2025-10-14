@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.FamilyMemberElderMapper">
+
+    <resultMap type="FamilyMemberElder" id="FamilyMemberElderResult">
+        <result property="id"    column="id"    />
+        <result property="familyMemberId"    column="family_member_id"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFamilyMemberElderVo">
+        select id, family_member_id, elder_id, create_time, update_time, create_by, update_by, remark from family_member_elder
+    </sql>
+
+    <select id="selectFamilyMemberElderList" parameterType="FamilyMemberElder" resultMap="FamilyMemberElderResult">
+        <include refid="selectFamilyMemberElderVo"/>
+        <where>
+            <if test="familyMemberId != null "> and family_member_id = #{familyMemberId}</if>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+        </where>
+    </select>
+
+    <select id="selectFamilyMemberElderById" parameterType="Long" resultMap="FamilyMemberElderResult">
+        <include refid="selectFamilyMemberElderVo"/>
+        where id = #{id}
+    </select>
+    <select id="my" resultType="com.zzyl.nursing.vo.FamilyMemberVo">
+        select family_member_elder.id, family_member_id, elder_id, name elderName
+        from family_member_elder
+        left join elder
+        on family_member_elder.elder_id = elder.id
+        where family_member_id = #{userId}
+    </select>
+
+    <select id="listByPage" resultType="com.zzyl.nursing.vo.FamilyMemberPageVo" parameterType="java.lang.Long">
+        select fme.id     mid,
+               fme.remark mremark,
+               fme.elder_id,
+               e.name,
+               e.image,
+               e.bed_number,
+               d.iot_id,
+               d.device_name,
+               d.product_key,
+               r.type_name typeName
+        from family_member_elder fme
+                 left join elder e
+                           on fme.elder_id = e.id
+                 left join device d
+                           on fme.elder_id = d.binding_location
+                 left join room r
+                           on e.bed_id = r.id
+    </select>
+
+    <insert id="insertFamilyMemberElder" parameterType="FamilyMemberElder" useGeneratedKeys="true" keyProperty="id">
+        insert into family_member_elder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="familyMemberId != null">family_member_id,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="familyMemberId != null">#{familyMemberId},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFamilyMemberElder" parameterType="FamilyMemberElder">
+        update family_member_elder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="familyMemberId != null">family_member_id = #{familyMemberId},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFamilyMemberElderById" parameterType="Long">
+        delete from family_member_elder where id = #{id}
+    </delete>
+
+    <delete id="deleteFamilyMemberElderByIds" parameterType="String">
+        delete from family_member_elder where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
