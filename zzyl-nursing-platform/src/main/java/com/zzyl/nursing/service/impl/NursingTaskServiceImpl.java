@@ -25,6 +25,7 @@ import com.zzyl.system.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -91,6 +92,10 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
             return nursingTaskVo;
         }
         List<SysUser> sysUsers = sysUserMapper.selectBatchIds(nurseIdList);
+
+        if (CollUtil.isEmpty(sysUsers)) {
+            return nursingTaskVo;
+        }
 
         List<String> collect = sysUsers.stream().map(SysUser::getNickName).collect(Collectors.toList());
 
@@ -220,6 +225,7 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
      @param elder
      */
     @Override
+    @Transactional
     public void createMonthTask(Elder elder) {
         //校验
         if (elder == null || elder.getId() == null) {
@@ -443,8 +449,18 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
         nursingTask.setElderName(elder.getName());
         // 设置床位号
         nursingTask.setBedNumber(elder.getBedNumber());
-        // 设置预估服务时间
-        nursingTask.setEstimatedServerTime(seconds);
+
+        // 设置预估服务时间 - 生成比当前时间大的随机时间
+        LocalDateTime now = LocalDateTime.now();
+        if (seconds.isBefore(now)) {
+            // 如果原定时间早于当前时间，生成一个未来24小时内的随机时间
+            Random random = new Random();
+            // 生成1-24小时之间的随机分钟数
+            int randomMinutes = random.nextInt(24 * 60) + 1;
+            nursingTask.setEstimatedServerTime(now.plusMinutes(randomMinutes));
+        } else {
+            nursingTask.setEstimatedServerTime(seconds);
+        }
         // 设置项目ID
         nursingTask.setProjectId(Long.valueOf(v.getProjectId()));
         // 设置老人ID

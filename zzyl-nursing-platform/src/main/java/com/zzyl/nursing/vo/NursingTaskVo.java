@@ -1,8 +1,11 @@
 package com.zzyl.nursing.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,12 +20,14 @@ public class NursingTaskVo {
     private Long id;
 
     @ApiModelProperty(value = "创建时间", example = "2024-09-27 23:08:17")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新人ID", example = "1")
     private String updateBy;
 
     @ApiModelProperty(value = "更新时间", example = "2024-09-27 23:25:18")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "护理员ID字符串", example = "103")
@@ -44,9 +49,11 @@ public class NursingTaskVo {
     private String bedNumber;
 
     @ApiModelProperty(value = "预计服务时间", example = "2024-09-27 08:00:00")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime estimatedServerTime;
 
     @ApiModelProperty(value = "实际服务时间", example = "2024-09-27 23:25:13")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime realServerTime;
 
     @ApiModelProperty(value = "执行记录", example = "222")
