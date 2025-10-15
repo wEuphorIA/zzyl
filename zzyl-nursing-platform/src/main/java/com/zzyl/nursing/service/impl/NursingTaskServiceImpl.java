@@ -1,13 +1,20 @@
 package com.zzyl.nursing.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zzyl.common.core.domain.entity.SysUser;
+import com.zzyl.common.exception.base.BaseException;
 import com.zzyl.common.utils.StringUtils;
 import com.zzyl.nursing.domain.*;
 import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.mapper.CheckInMapper;
+import com.zzyl.nursing.mapper.ElderMapper;
+import com.zzyl.nursing.mapper.NursingLevelMapper;
 import com.zzyl.nursing.mapper.NursingTaskMapper;
 import com.zzyl.nursing.service.*;
 import com.zzyl.nursing.vo.NursingPlanVo;
@@ -40,6 +47,12 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
     @Resource
     private SysUserMapper sysUserMapper;
 
+    @Resource
+    private ElderMapper elderMapper;
+
+    @Resource
+    private CheckInMapper checkInMapper;
+
     /**
      查询护理任务
 
@@ -47,8 +60,43 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
      @return 护理任务
      */
     @Override
-    public NursingTask selectNursingTaskById(Long id) {
-        return getById(id);
+    public NursingTaskVo selectNursingTaskById(Long id) {
+
+        NursingTask nursingTask = getById(id);
+
+        NursingTaskVo nursingTaskVo = BeanUtil.toBean(nursingTask, NursingTaskVo.class);
+        if (ObjectUtil.isNull(nursingTask)) {
+            throw new BaseException("护理任务不存在");
+        }
+        Elder elder = elderMapper.selectById(nursingTaskVo.getElderId());
+        if (ObjectUtil.isNull(elder)) {
+            throw new BaseException("老人不存在");
+        }
+
+        CheckIn checkIn = checkInMapper.selectOne(new LambdaQueryWrapper<CheckIn>().eq(CheckIn::getElderId, nursingTaskVo.getElderId()));
+        if (ObjectUtil.isNull(checkIn)) {
+            throw new BaseException("该老人未入住");
+        }
+
+        nursingTaskVo.setAge(IdcardUtil.getAgeByIdCard(elder.getIdCardNo()));
+        nursingTaskVo.setSex(String.valueOf(IdcardUtil.getGenderByIdCard(elder.getIdCardNo())));
+        nursingTaskVo.setNursingLevelName(checkIn.getNursingLevelName());
+
+        List<Long> nurseIdList = Arrays.stream(nursingTask.getNursingId().split(","))
+                .map(String::trim)     // 去除空格
+                .map(Long::valueOf)    // 转为Long
+                .collect(Collectors.toList());
+        // 判空
+        if (CollUtil.isEmpty(nurseIdList)) {
+            return nursingTaskVo;
+        }
+        List<SysUser> sysUsers = sysUserMapper.selectBatchIds(nurseIdList);
+
+        List<String> collect = sysUsers.stream().map(SysUser::getNickName).collect(Collectors.toList());
+
+        nursingTaskVo.setNursingName(collect);
+
+        return nursingTaskVo;
     }
 
     /**
@@ -62,7 +110,7 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
 
         List<NursingTaskVo> nursingTaskVos = nursingTaskMapper.selectNursingTaskList(nursingTaskQueryDto);
 
-        if(CollUtil.isEmpty(nursingTaskVos)){
+        if (CollUtil.isEmpty(nursingTaskVos)) {
             return new ArrayList<>();
         }
 
@@ -76,14 +124,14 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
                 .distinct()
                 .collect(Collectors.toList());
 
-        if(CollUtil.isEmpty(nursingIdList)){
+        if (CollUtil.isEmpty(nursingIdList)) {
             return nursingTaskVos;
         }
 
         List<SysUser> sysUsers = sysUserMapper.selectBatchIds(nursingIdList);
 
 
-        if(CollUtil.isEmpty(sysUsers)){
+        if (CollUtil.isEmpty(sysUsers)) {
             return nursingTaskVos;
         }
 
@@ -100,6 +148,7 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
                 task.setNursingName(nurseNames);
             }
         });
+
         return nursingTaskVos;
     }
 

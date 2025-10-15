@@ -22,7 +22,7 @@ public interface INursingTaskService extends IService<NursingTask>
      * @param id 护理任务主键
      * @return 护理任务
      */
-    public NursingTask selectNursingTaskById(Long id);
+    public NursingTaskVo selectNursingTaskById(Long id);
 
     /**
      * 查询护理任务列表

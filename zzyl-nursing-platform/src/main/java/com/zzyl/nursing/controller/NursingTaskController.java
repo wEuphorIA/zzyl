@@ -74,7 +74,7 @@ public class NursingTaskController extends BaseController
      */
     @GetMapping(value = "/{id}")
     @ApiOperation("获取护理任务详细信息")
-    public R<NursingTask> getInfo(@ApiParam(value = "护理任务ID", required = true) @PathVariable("id") Long id)
+    public R<NursingTaskVo> getInfo(@ApiParam(value = "护理任务ID", required = true) @PathVariable("id") Long id)
     {
         return R.ok(nursingTaskService.selectNursingTaskById(id));
     }
