@@ -37,7 +37,7 @@ import com.zzyl.common.core.page.TableDataInfo;
  * @date 2024-11-17
  */
 @RestController
-@RequestMapping("/nursing/task")
+@RequestMapping("/nursing/nursingTask")
 @Api(tags = "护理任务管理")
 public class NursingTaskController extends BaseController
 {

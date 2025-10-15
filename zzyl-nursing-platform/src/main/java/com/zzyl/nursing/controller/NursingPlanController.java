@@ -37,7 +37,7 @@ import com.zzyl.common.core.page.TableDataInfo;
  */
 @Api(tags = "护理计划管理")
 @RestController
-@RequestMapping("/nursing/plan")
+@RequestMapping("/nursing/nursingPlan")
 public class NursingPlanController extends BaseController
 {
     @Autowired
