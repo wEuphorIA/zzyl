@@ -1,6 +1,8 @@
 package com.zzyl.system.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import com.zzyl.common.core.domain.entity.SysUser;
 import org.apache.ibatis.annotations.Select;
@@ -10,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
  * 
  * @author ruoyi
  */
-public interface SysUserMapper
+public interface SysUserMapper extends BaseMapper<SysUser>
 {
     /**
      * 根据条件分页查询用户列表
@@ -128,4 +130,7 @@ public interface SysUserMapper
 
     @Select("select * from sys_user where dept_id = #{deptId}")
     List<SysUser> getUserListByDept(Long deptId);
+
+    List<SysUser> selectBatchIds(@Param("ids") List<Long> ids);
+
 }

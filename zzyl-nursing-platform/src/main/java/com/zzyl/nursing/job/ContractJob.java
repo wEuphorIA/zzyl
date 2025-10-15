@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zzyl.nursing.domain.Contract;
 import com.zzyl.nursing.service.IContractService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ContractJob {
 
-    @Resource
+    @Autowired
     private IContractService contractService;
 
     @Scheduled(cron = "0 1,31 * * * ?")

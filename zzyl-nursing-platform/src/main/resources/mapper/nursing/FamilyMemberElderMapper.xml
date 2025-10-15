@@ -55,8 +55,10 @@
                            on fme.elder_id = e.id
                  left join device d
                            on fme.elder_id = d.binding_location
-                 left join room r
-                           on e.bed_id = r.id
+                 left join bed b
+                           on e.bed_id = b.id
+                left join room r
+                            on b.room_id = r.id
     </select>
 
     <insert id="insertFamilyMemberElder" parameterType="FamilyMemberElder" useGeneratedKeys="true" keyProperty="id">

@@ -1,8 +1,12 @@
 package com.zzyl.nursing.service;
 
 import java.util.List;
+
+import com.zzyl.nursing.domain.Elder;
 import com.zzyl.nursing.domain.NursingTask;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.vo.NursingTaskVo;
 
 /**
  * 护理任务Service接口
@@ -23,10 +27,10 @@ public interface INursingTaskService extends IService<NursingTask>
     /**
      * 查询护理任务列表
      * 
-     * @param nursingTask 护理任务
+     * @param nursingTaskQueryDto 护理任务
      * @return 护理任务集合
      */
-    public List<NursingTask> selectNursingTaskList(NursingTask nursingTask);
+    public List<NursingTaskVo> selectNursingTaskList(NursingTaskQueryDto nursingTaskQueryDto);
 
     /**
      * 新增护理任务
@@ -59,4 +63,6 @@ public interface INursingTaskService extends IService<NursingTask>
      * @return 结果
      */
     public int deleteNursingTaskById(Long id);
+
+    void createMonthTask(Elder elder);
 }

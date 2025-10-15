@@ -1,9 +1,13 @@
 package com.zzyl.nursing.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.collection.CollUtil;
 import com.zzyl.common.core.domain.R;
+import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.vo.NursingTaskVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,25 +49,25 @@ public class NursingTaskController extends BaseController
      */
     @GetMapping("/list")
     @ApiOperation(value = "获取护理任务列表")
-    public TableDataInfo<List<NursingTask>> list(@ApiParam(value = "护理任务查询条件") NursingTask nursingTask)
+    public TableDataInfo<List<NursingTaskVo>> list(@ApiParam(value = "护理任务查询条件") NursingTaskQueryDto nursingTaskQueryDto)
     {
         startPage();
-        List<NursingTask> list = nursingTaskService.selectNursingTaskList(nursingTask);
+        List<NursingTaskVo> list = nursingTaskService.selectNursingTaskList(nursingTaskQueryDto);
         return getDataTable(list);
     }
 
     /**
      * 导出护理任务列表
      */
-    @Log(title = "护理任务", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ApiOperation("导出护理任务列表")
-    public void export(HttpServletResponse response, @ApiParam(value = "护理任务查询条件") NursingTask nursingTask)
-    {
-        List<NursingTask> list = nursingTaskService.selectNursingTaskList(nursingTask);
-        ExcelUtil<NursingTask> util = new ExcelUtil<NursingTask>(NursingTask.class);
-        util.exportExcel(response, list, "护理任务数据");
-    }
+    // @Log(title = "护理任务", businessType = BusinessType.EXPORT)
+    // @PostMapping("/export")
+    // @ApiOperation("导出护理任务列表")
+    // public void export(HttpServletResponse response, @ApiParam(value = "护理任务查询条件") NursingTask nursingTask)
+    // {
+    //     List<NursingTask> list = nursingTaskService.selectNursingTaskList(nursingTask);
+    //     ExcelUtil<NursingTask> util = new ExcelUtil<NursingTask>(NursingTask.class);
+    //     util.exportExcel(response, list, "护理任务数据");
+    // }
 
     /**
      * 获取护理任务详细信息

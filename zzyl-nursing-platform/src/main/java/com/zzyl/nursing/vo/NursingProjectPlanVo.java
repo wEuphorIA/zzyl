@@ -26,5 +26,5 @@ public class NursingProjectPlanVo {
 
     /** 执行频次 */
     @Excel(name = "执行频次")
-    private Long executeFrequency;
+    private Integer executeFrequency;
 }

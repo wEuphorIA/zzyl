@@ -1,6 +1,8 @@
 package com.zzyl.nursing.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.vo.NursingTaskVo;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 import com.zzyl.nursing.domain.NursingTask;
@@ -25,10 +27,10 @@ public interface NursingTaskMapper extends BaseMapper<NursingTask>
     /**
      * 查询护理任务列表
      * 
-     * @param nursingTask 护理任务
+     * @param nursingTaskQueryDto 护理任务
      * @return 护理任务集合
      */
-    public List<NursingTask> selectNursingTaskList(NursingTask nursingTask);
+    public List<NursingTaskVo> selectNursingTaskList(NursingTaskQueryDto nursingTaskQueryDto);
 
     /**
      * 新增护理任务
