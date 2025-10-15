@@ -133,4 +133,6 @@ public interface SysUserMapper extends BaseMapper<SysUser>
 
     List<SysUser> selectBatchIds(@Param("ids") List<Long> ids);
 
+
+
 }

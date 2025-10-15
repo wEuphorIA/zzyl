@@ -11,6 +11,8 @@ import com.zzyl.common.core.domain.entity.SysUser;
 import com.zzyl.common.exception.base.BaseException;
 import com.zzyl.common.utils.StringUtils;
 import com.zzyl.nursing.domain.*;
+import com.zzyl.nursing.dto.CancelNursingTaskDto;
+import com.zzyl.nursing.dto.NursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskQueryDto;
 import com.zzyl.nursing.mapper.CheckInMapper;
 import com.zzyl.nursing.mapper.ElderMapper;
@@ -100,6 +102,12 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
         List<String> collect = sysUsers.stream().map(SysUser::getNickName).collect(Collectors.toList());
 
         nursingTaskVo.setNursingName(collect);
+
+        if (nursingTask.getStatus() == 3 || nursingTask.getStatus() == 2){
+            String updateBy = nursingTask.getUpdateBy();
+            SysUser sysUser = sysUserMapper.selectUserById(Long.valueOf(updateBy));
+            nursingTaskVo.setUpdater(sysUser.getNickName());
+        }
 
         return nursingTaskVo;
     }
@@ -471,4 +479,34 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
         return nursingTask;
     }
 
+    @Override
+    public void cancel(CancelNursingTaskDto cancelNursingTaskDto) {
+        NursingTask nursingTask = nursingTaskMapper.selectById(cancelNursingTaskDto.getTaskId());
+
+        if (ObjectUtil.isNull(nursingTask)){
+            throw new BaseException("任务不存在");
+        }
+
+        //修改状态 设置取消原因
+        nursingTask.setStatus(3);
+        nursingTask.setCancelReason(cancelNursingTaskDto.getReason());
+
+        nursingTaskMapper.updateById(nursingTask);
+    }
+
+    @Override
+    public void doTask(NursingTaskDto nursingTaskDto) {
+        NursingTask nursingTask = nursingTaskMapper.selectById(nursingTaskDto.getTaskId());
+
+        if (ObjectUtil.isNull(nursingTask)){
+            throw new BaseException("任务不存在");
+        }
+
+        //修改状态 设置完成
+        nursingTask.setStatus(2);
+        nursingTask.setMark(nursingTaskDto.getMark());
+        nursingTask.setTaskImage(nursingTaskDto.getTaskImage());
+        nursingTask.setRealServerTime(LocalDateTime.parse(nursingTaskDto.getEstimatedServerTime()));
+        nursingTaskMapper.updateById(nursingTask);
+    }
 }

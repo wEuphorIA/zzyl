@@ -5,6 +5,8 @@ import java.util.List;
 import com.zzyl.nursing.domain.Elder;
 import com.zzyl.nursing.domain.NursingTask;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.dto.CancelNursingTaskDto;
+import com.zzyl.nursing.dto.NursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskQueryDto;
 import com.zzyl.nursing.vo.NursingTaskVo;
 
@@ -65,4 +67,8 @@ public interface INursingTaskService extends IService<NursingTask>
     public int deleteNursingTaskById(Long id);
 
     void createMonthTask(Elder elder);
+
+    void cancel(CancelNursingTaskDto cancelNursingTaskDto);
+
+    void doTask(NursingTaskDto nursingTaskDto);
 }
