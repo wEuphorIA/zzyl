@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzyl.nursing.dto.CancelNursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.dto.RescheduleTaskRequestDto;
 import com.zzyl.nursing.vo.NursingTaskVo;
 
 /**
@@ -71,4 +72,6 @@ public interface INursingTaskService extends IService<NursingTask>
     void cancel(CancelNursingTaskDto cancelNursingTaskDto);
 
     void doTask(NursingTaskDto nursingTaskDto);
+
+    void updateTime(RescheduleTaskRequestDto requestDto);
 }

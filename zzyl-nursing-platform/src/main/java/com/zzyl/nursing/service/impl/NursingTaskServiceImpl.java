@@ -14,6 +14,7 @@ import com.zzyl.nursing.domain.*;
 import com.zzyl.nursing.dto.CancelNursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.dto.RescheduleTaskRequestDto;
 import com.zzyl.nursing.mapper.CheckInMapper;
 import com.zzyl.nursing.mapper.ElderMapper;
 import com.zzyl.nursing.mapper.NursingLevelMapper;
@@ -506,7 +507,19 @@ public class NursingTaskServiceImpl extends ServiceImpl<NursingTaskMapper, Nursi
         nursingTask.setStatus(2);
         nursingTask.setMark(nursingTaskDto.getMark());
         nursingTask.setTaskImage(nursingTaskDto.getTaskImage());
-        nursingTask.setRealServerTime(LocalDateTime.parse(nursingTaskDto.getEstimatedServerTime()));
+        nursingTask.setRealServerTime(nursingTaskDto.getEstimatedServerTime());
         nursingTaskMapper.updateById(nursingTask);
     }
+
+    @Override
+    public void updateTime(RescheduleTaskRequestDto requestDto) {
+        NursingTask nursingTask = nursingTaskMapper.selectById(requestDto.getTaskId());
+        if (ObjectUtil.isNull(nursingTask)){
+            throw new BaseException("任务不存在");
+        }
+        System.out.println(requestDto.getEstimatedServerTime());
+        nursingTask.setEstimatedServerTime(requestDto.getEstimatedServerTime());
+        nursingTaskMapper.updateById(nursingTask);
+    }
+
 }

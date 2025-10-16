@@ -9,6 +9,7 @@ import com.zzyl.common.core.domain.R;
 import com.zzyl.nursing.dto.CancelNursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskDto;
 import com.zzyl.nursing.dto.NursingTaskQueryDto;
+import com.zzyl.nursing.dto.RescheduleTaskRequestDto;
 import com.zzyl.nursing.vo.NursingTaskVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -118,6 +119,13 @@ public class NursingTaskController extends BaseController {
     @ApiOperation("执行任务")
     public R doTask(@ApiParam(value = "护理任务ID数组", required = true) @RequestBody NursingTaskDto nursingTaskDto) {
         nursingTaskService.doTask(nursingTaskDto);
+        return R.ok();
+    }
+
+    @PutMapping("updateTime")
+    @ApiOperation("更新任务时间")
+    public R updateTime(@ApiParam(value = "护理任务ID数组", required = true) @RequestBody RescheduleTaskRequestDto requestDto){
+        nursingTaskService.updateTime(requestDto);
         return R.ok();
     }
 
