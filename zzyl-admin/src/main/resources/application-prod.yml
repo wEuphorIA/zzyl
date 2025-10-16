@@ -204,8 +204,3 @@ aliyun:
 dept:
   nursingId: 201
 
-# 百度千帆大模型配置
-baidu:
-  accessKey: ALTAKarork1b7x7N456rQWeJhB
-  secretKey: a1557b92f5484ae6b4eb6d6a185fad70
-  qianfanModel: ERNIE-4.0-8K-Preview

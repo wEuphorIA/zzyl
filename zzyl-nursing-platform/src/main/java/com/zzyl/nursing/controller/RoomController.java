@@ -8,6 +8,7 @@ import com.zzyl.common.core.page.TableDataInfo;
 import com.zzyl.common.enums.BusinessType;
 import com.zzyl.nursing.domain.Room;
 import com.zzyl.nursing.service.IRoomService;
+import com.zzyl.nursing.vo.DeviceVo;
 import com.zzyl.nursing.vo.RoomVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -102,10 +103,14 @@ public class RoomController extends BaseController {
 
     @ApiOperation("根据房间id查询房间数据(楼层、房间、价格")
     @GetMapping("/one/{id}")
-    public R<RoomVo> one(@PathVariable Long id){
+    public R<RoomVo> one(@PathVariable Long id) {
         RoomVo result = roomService.one(id);
         return R.ok(result);
     }
 
-
+    @GetMapping("/getRoomsWithDeviceByFloorId/{floorId}")
+    @ApiOperation("获取所有房间（智能床位）")
+    public R<List<RoomVo>> getRoomsWithDeviceByFloorId(@PathVariable(name = "floorId") Long floorId){
+        return R.ok(roomService.getRoomsWithDeviceByFloorId(floorId));
+    }
 }

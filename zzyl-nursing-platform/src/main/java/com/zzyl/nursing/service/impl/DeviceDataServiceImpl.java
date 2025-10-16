@@ -9,9 +9,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjectUtil;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zzyl.common.constant.CacheConstants;
 import com.zzyl.common.constant.HttpStatus;
 import com.zzyl.common.core.page.TableDataInfo;
 import com.zzyl.common.utils.DateUtils;
@@ -22,6 +24,7 @@ import com.zzyl.nursing.mapper.DeviceMapper;
 import com.zzyl.nursing.mq.vo.IotMsgNotifyData;
 import com.zzyl.nursing.mq.vo.IotMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import com.zzyl.nursing.mapper.DeviceDataMapper;
 import com.zzyl.nursing.domain.DeviceData;
@@ -29,6 +32,8 @@ import com.zzyl.nursing.service.IDeviceDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.reactive.TransactionalOperator;
+
+import static com.zzyl.common.constant.CacheConstants.IOT_DEVICE_LAST_DATA;
 
 /**
  设备数据Service业务层处理
@@ -43,6 +48,9 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
 
     @Autowired
     private DeviceMapper deviceMapper;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
 
     /**
      查询设备数据
@@ -183,5 +191,7 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
             });
         }
         saveBatch(list);
+
+        redisTemplate.opsForHash().put(IOT_DEVICE_LAST_DATA,deviceId, JSON.toJSONString(list));
     }
 }

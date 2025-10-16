@@ -131,6 +131,57 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where r.id = #{id}
     </select>
 
+    <resultMap id="RoomVoResult" type="com.zzyl.nursing.vo.RoomVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="bedVoList" ofType="com.zzyl.nursing.vo.BedVo" autoMapping="true">
+            <id column="bid" property="id"/>
+            <result column="eid" property="elderId"/>
+            <result column="ename" property="ename"/>
+            <collection property="deviceVos" ofType="com.zzyl.nursing.vo.DeviceInfo">
+                <id column="b_did" property="id"/>
+                <result column="b_iot_id" property="iotId"/>
+                <result column="b_device_name" property="deviceName"/>
+                <result column="b_product_key" property="productKey"/>
+                <result column="b_product_name" property="productName"/>
+            </collection>
+        </collection>
+        <collection property="deviceVos" ofType="com.zzyl.nursing.vo.DeviceInfo" autoMapping="true">
+            <id column="did" property="id"/>
+<!--            <result column="iot_id" property="iotId"/>-->
+<!--            <result column="device_name" property="deviceName"/>-->
+<!--            <result column="product_key" property="productKey"/>-->
+<!--            <result column="product_name" property="productName"/>-->
+        </collection>
+    </resultMap>
+
+    <select id="getRoomsWithDeviceByFloorId" resultMap="RoomVoResult">
+        select r.id,
+               r.code,
+               b.id bid,
+               b.bed_number,
+               b.bed_status,
+               e.name          ename,
+               e.id            eid,
+               d.id did,
+               d.iot_id,
+               d.device_name,
+               d.product_key,
+               d.product_name,
+               dd.id           b_did,
+               dd.iot_id       b_iot_id,
+               dd.device_name  b_device_name,
+               dd.product_key  b_product_key,
+               dd.product_name b_product_name
+        from room r
+                 left join bed b on r.id = b.room_id
+                 left join elder e on e.bed_id = b.id
+                 left join device d
+                           on d.binding_location = r.id and d.location_type = 1 and d.physical_location_type = 1
+                 left join device dd
+                           on dd.binding_location = b.id and dd.location_type = 1 and dd.physical_location_type = 2
+        where r.floor_id = #{floorId} and (d.id is not null or dd.id is not null)
+    </select>
+
 
     <insert id="insertRoom" parameterType="Room" useGeneratedKeys="true" keyProperty="id">
         insert into room

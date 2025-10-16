@@ -43,4 +43,9 @@ public class CacheConstants
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
 
     public static final String ALL_PRODUCT_KEY = "iot:all_product";
+
+    /**
+     * iot设备最后数据
+     */
+    public static final String IOT_DEVICE_LAST_DATA = "iot:device_last_data";
 }

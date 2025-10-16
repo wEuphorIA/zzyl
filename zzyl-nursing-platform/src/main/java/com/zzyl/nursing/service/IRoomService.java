@@ -2,6 +2,7 @@ package com.zzyl.nursing.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzyl.nursing.domain.Room;
+import com.zzyl.nursing.vo.DeviceVo;
 import com.zzyl.nursing.vo.RoomVo;
 
 import java.util.List;
@@ -69,4 +70,6 @@ public interface IRoomService extends IService<Room>
     List<RoomVo> getRoomsWithNurByFloorId(Long floorId);
 
     RoomVo one(Long id);
+
+    List<RoomVo> getRoomsWithDeviceByFloorId(Long floorId);
 }

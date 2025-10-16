@@ -113,4 +113,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where b.bed_status = #{status}
         order by f.id, r.id, b.id
     </select>
+    <select id="getAllFloorsWithDevice" resultType="com.zzyl.nursing.vo.FloorVo">
+        select f.*
+        from floor f
+                 left join room r on r.floor_id = f.id
+                 left join bed b on r.id = b.room_id
+                 left join device d on d.binding_location = r.id and d.location_type = 1 and d.physical_location_type = 1
+                 left join device dd on dd.binding_location = b.id and dd.location_type = 1 and dd.physical_location_type = 2
+        where d.id is not null or dd.id is not null
+        group by f.id
+    </select>
 </mapper>

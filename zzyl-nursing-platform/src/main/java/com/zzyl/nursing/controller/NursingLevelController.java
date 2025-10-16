@@ -121,7 +121,7 @@ public class NursingLevelController extends BaseController {
     /**
      查询所有护理等级
      */
-    @GetMapping("/all")
+    @GetMapping("/listAll")
     @ApiOperation(value = "获取所有护理计划")
     public R<List<NursingLevel>> listAll() {
 
