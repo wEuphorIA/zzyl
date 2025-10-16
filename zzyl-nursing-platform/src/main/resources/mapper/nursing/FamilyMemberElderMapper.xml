@@ -59,6 +59,7 @@
                            on e.bed_id = b.id
                 left join room r
                             on b.room_id = r.id
+        where d.physical_location_type = -1
     </select>
 
     <insert id="insertFamilyMemberElder" parameterType="FamilyMemberElder" useGeneratedKeys="true" keyProperty="id">
