@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzyl.nursing.mapper.AlertRuleMapper">
+
+    <resultMap type="AlertRule" id="AlertRuleResult">
+        <result property="id"    column="id"    />
+        <result property="productKey"    column="product_key"    />
+        <result property="productName"    column="product_name"    />
+        <result property="moduleId"    column="module_id"    />
+        <result property="moduleName"    column="module_name"    />
+        <result property="functionName"    column="function_name"    />
+        <result property="functionId"    column="function_id"    />
+        <result property="iotId"    column="iot_id"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="alertDataType"    column="alert_data_type"    />
+        <result property="alertRuleName"    column="alert_rule_name"    />
+        <result property="operator"    column="operator"    />
+        <result property="value"    column="value"    />
+        <result property="duration"    column="duration"    />
+        <result property="alertEffectivePeriod"    column="alert_effective_period"    />
+        <result property="alertSilentPeriod"    column="alert_silent_period"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAlertRuleVo">
+        select id, product_key, product_name, module_id, module_name, function_name, function_id, iot_id, device_name, alert_data_type, alert_rule_name, operator, value, duration, alert_effective_period, alert_silent_period, status, create_time, update_time, create_by, update_by, remark from alert_rule
+    </sql>
+
+    <select id="selectAlertRuleList" parameterType="AlertRule" resultMap="AlertRuleResult">
+        <include refid="selectAlertRuleVo"/>
+        <where>
+            <if test="productKey != null  and productKey != ''"> and product_key = #{productKey}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="moduleId != null  and moduleId != ''"> and module_id = #{moduleId}</if>
+            <if test="moduleName != null  and moduleName != ''"> and module_name like concat('%', #{moduleName}, '%')</if>
+            <if test="functionName != null  and functionName != ''"> and function_name like concat('%', #{functionName}, '%')</if>
+            <if test="functionId != null  and functionId != ''"> and function_id = #{functionId}</if>
+            <if test="iotId != null  and iotId != ''"> and iot_id = #{iotId}</if>
+            <if test="deviceName != null  and deviceName != ''"> and device_name like concat('%', #{deviceName}, '%')</if>
+            <if test="alertDataType != null "> and alert_data_type = #{alertDataType}</if>
+            <if test="alertRuleName != null  and alertRuleName != ''"> and alert_rule_name like concat('%', #{alertRuleName}, '%')</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="value != null "> and value = #{value}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="alertEffectivePeriod != null  and alertEffectivePeriod != ''"> and alert_effective_period = #{alertEffectivePeriod}</if>
+            <if test="alertSilentPeriod != null "> and alert_silent_period = #{alertSilentPeriod}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectAlertRuleById" parameterType="Long" resultMap="AlertRuleResult">
+        <include refid="selectAlertRuleVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAlertRule" parameterType="AlertRule" useGeneratedKeys="true" keyProperty="id">
+        insert into alert_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productKey != null">product_key,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="moduleId != null">module_id,</if>
+            <if test="moduleName != null">module_name,</if>
+            <if test="functionName != null">function_name,</if>
+            <if test="functionId != null">function_id,</if>
+            <if test="iotId != null">iot_id,</if>
+            <if test="deviceName != null">device_name,</if>
+            <if test="alertDataType != null">alert_data_type,</if>
+            <if test="alertRuleName != null">alert_rule_name,</if>
+            <if test="operator != null">operator,</if>
+            <if test="value != null">value,</if>
+            <if test="duration != null">duration,</if>
+            <if test="alertEffectivePeriod != null">alert_effective_period,</if>
+            <if test="alertSilentPeriod != null">alert_silent_period,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productKey != null">#{productKey},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="moduleId != null">#{moduleId},</if>
+            <if test="moduleName != null">#{moduleName},</if>
+            <if test="functionName != null">#{functionName},</if>
+            <if test="functionId != null">#{functionId},</if>
+            <if test="iotId != null">#{iotId},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="alertDataType != null">#{alertDataType},</if>
+            <if test="alertRuleName != null">#{alertRuleName},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="value != null">#{value},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="alertEffectivePeriod != null">#{alertEffectivePeriod},</if>
+            <if test="alertSilentPeriod != null">#{alertSilentPeriod},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAlertRule" parameterType="AlertRule">
+        update alert_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productKey != null">product_key = #{productKey},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="moduleId != null">module_id = #{moduleId},</if>
+            <if test="moduleName != null">module_name = #{moduleName},</if>
+            <if test="functionName != null">function_name = #{functionName},</if>
+            <if test="functionId != null">function_id = #{functionId},</if>
+            <if test="iotId != null">iot_id = #{iotId},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="alertDataType != null">alert_data_type = #{alertDataType},</if>
+            <if test="alertRuleName != null">alert_rule_name = #{alertRuleName},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="alertEffectivePeriod != null">alert_effective_period = #{alertEffectivePeriod},</if>
+            <if test="alertSilentPeriod != null">alert_silent_period = #{alertSilentPeriod},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlertRuleById" parameterType="Long">
+        delete from alert_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteAlertRuleByIds" parameterType="String">
+        delete from alert_rule where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
