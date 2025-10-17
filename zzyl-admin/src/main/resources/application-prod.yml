@@ -204,3 +204,7 @@ aliyun:
 dept:
   nursingId: 201
 
+alert:
+  deviceMaintainerRole: 维修工
+  managerRole: 超级管理员
+

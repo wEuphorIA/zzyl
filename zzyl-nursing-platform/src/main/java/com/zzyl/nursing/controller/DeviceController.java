@@ -90,4 +90,10 @@ public class DeviceController extends BaseController {
         return success();
     }
 
+    @GetMapping("/queryProduct/{productKey}")
+    @ApiOperation("查询产品详情")
+    public AjaxResult queryProduct(@PathVariable String productKey){
+        return deviceService.queryProduct(productKey);
+    }
+
 }

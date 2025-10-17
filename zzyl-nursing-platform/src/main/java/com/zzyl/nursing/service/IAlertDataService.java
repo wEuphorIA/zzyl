@@ -3,6 +3,7 @@ package com.zzyl.nursing.service;
 import java.util.List;
 import com.zzyl.nursing.domain.AlertData;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.dto.AlertProcessResultDTO;
 
 /**
  * 报警数据Service接口
@@ -59,4 +60,6 @@ public interface IAlertDataService extends IService<AlertData>
      * @return 结果
      */
     public int deleteAlertDataById(Long id);
+
+    void handleAlertData(AlertProcessResultDTO dto);
 }

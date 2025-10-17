@@ -50,6 +50,23 @@
         where id = #{id}
     </select>
 
+    <select id="selectNursingIdsByIotIdWithElder" resultType="java.lang.Long">
+        select ne.nursing_id
+        from device d
+            left join nursing_elder ne on d.binding_location = ne.elder_id
+        where d.location_type = 0
+        and d.iot_id = #{iotId}
+    </select>
+
+    <select id="selectNursingIdsByIotIdWithBed" resultType="java.lang.Long">
+        select ne.nursing_id
+        from device d
+        left join bed b on b.id = d.binding_location
+        left join nursing_elder ne on d.binding_location = ne.elder_id
+        where d.location_type = 1 and d.physical_location_type = 2
+          and d.iot_id = #{iotId}
+    </select>
+
     <insert id="insertDevice" parameterType="Device" useGeneratedKeys="true" keyProperty="id">
         insert into device
         <trim prefix="(" suffix=")" suffixOverrides=",">

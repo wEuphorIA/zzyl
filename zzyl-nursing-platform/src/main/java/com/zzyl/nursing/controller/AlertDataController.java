@@ -1,22 +1,19 @@
 package com.zzyl.nursing.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zzyl.common.core.domain.R;
+import com.zzyl.common.core.domain.model.LoginUser;
+import com.zzyl.common.utils.SecurityUtils;
+import com.zzyl.nursing.dto.AlertProcessResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.zzyl.common.annotation.Log;
 import com.zzyl.common.core.controller.BaseController;
 import com.zzyl.common.core.domain.AjaxResult;
@@ -50,6 +47,8 @@ public class AlertDataController extends BaseController
     {
         startPage();
         List<AlertData> list = alertDataService.selectAlertDataList(alertData);
+        list = list.stream().filter(a -> a.getUserId().equals(SecurityUtils.getLoginUser().getUserId()))
+                .collect(Collectors.toList());
         return getDataTable(list);
     }
 
@@ -112,5 +111,12 @@ public class AlertDataController extends BaseController
     public AjaxResult remove(@ApiParam("报警数据ID数组") @PathVariable Long[] ids)
     {
         return toAjax(alertDataService.deleteAlertDataByIds(ids));
+    }
+
+    @PutMapping("/handleAlertData")
+    @ApiOperation("处理设备报警数据")
+    public AjaxResult handleAlertData(@ApiParam("报警数据处理") @RequestBody AlertProcessResultDTO  dto){
+        alertDataService.handleAlertData(dto);
+        return success();
     }
 }

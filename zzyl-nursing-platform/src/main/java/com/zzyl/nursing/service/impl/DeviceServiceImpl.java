@@ -358,4 +358,22 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
         client.deleteDevice(request);
     }
+
+    @Override
+    public AjaxResult queryProduct(String productKey) {
+
+        //参数校验
+        if(StringUtils.isEmpty(productKey)){
+            throw new BaseException("请输入正确的参数");
+        }
+
+        ShowProductResponse showProductResponse = client.showProduct(new ShowProductRequest().withProductId(productKey));
+
+        if (showProductResponse.getHttpStatusCode() != 200){
+            throw new BaseException("物联网接口 - 查询产品信息，调用失败");
+        }
+
+        List<ServiceCapability> serviceCapabilities = showProductResponse.getServiceCapabilities();
+        return AjaxResult.success(serviceCapabilities);
+    }
 }

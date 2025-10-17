@@ -79,4 +79,6 @@ public interface IDeviceService extends IService<Device>
     void update(DeviceDto deviceDto);
 
     void delete(String iotId);
+
+    AjaxResult queryProduct(String productKey);
 }

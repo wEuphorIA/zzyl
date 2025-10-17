@@ -61,4 +61,8 @@ public interface DeviceMapper extends BaseMapper<Device>
      * @return 结果
      */
     public int deleteDeviceByIds(Long[] ids);
+
+    List<Long> selectNursingIdsByIotIdWithElder(String iotId);
+
+    List<Long> selectNursingIdsByIotIdWithBed(String iotId);
 }
