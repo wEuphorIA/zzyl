@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.zzyl.common.core.domain.R;
 import com.zzyl.common.core.domain.model.LoginUser;
 import com.zzyl.common.utils.SecurityUtils;
+import com.zzyl.nursing.dto.AlertDataQueryDto;
 import com.zzyl.nursing.dto.AlertProcessResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +44,7 @@ public class AlertDataController extends BaseController
     @ApiOperation("查询报警数据列表")
     @PreAuthorize("@ss.hasPermi('nursing:alertData:list')")
     @GetMapping("/list")
-    public TableDataInfo<List<AlertData>> list(@ApiParam("报警数据查询条件") AlertData alertData)
+    public TableDataInfo<List<AlertData>> list(@ApiParam("报警数据查询条件") AlertDataQueryDto alertData)
     {
         startPage();
         List<AlertData> list = alertDataService.selectAlertDataList(alertData);
@@ -55,16 +56,16 @@ public class AlertDataController extends BaseController
     /**
      * 导出报警数据列表
      */
-    @ApiOperation("导出报警数据列表")
-    @PreAuthorize("@ss.hasPermi('nursing:alertData:export')")
-    @Log(title = "报警数据", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(@ApiParam(value = "报警数据查询条件") HttpServletResponse response, AlertData alertData)
-    {
-        List<AlertData> list = alertDataService.selectAlertDataList(alertData);
-        ExcelUtil<AlertData> util = new ExcelUtil<AlertData>(AlertData.class);
-        util.exportExcel(response, list, "报警数据数据");
-    }
+    // @ApiOperation("导出报警数据列表")
+    // @PreAuthorize("@ss.hasPermi('nursing:alertData:export')")
+    // @Log(title = "报警数据", businessType = BusinessType.EXPORT)
+    // @PostMapping("/export")
+    // public void export(@ApiParam(value = "报警数据查询条件") HttpServletResponse response, AlertData alertData)
+    // {
+    //     List<AlertData> list = alertDataService.selectAlertDataList(alertData);
+    //     ExcelUtil<AlertData> util = new ExcelUtil<AlertData>(AlertData.class);
+    //     util.exportExcel(response, list, "报警数据数据");
+    // }
 
     /**
      * 获取报警数据详细信息

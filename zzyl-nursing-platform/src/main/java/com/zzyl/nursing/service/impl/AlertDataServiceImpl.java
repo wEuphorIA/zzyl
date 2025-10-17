@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.zzyl.common.exception.base.BaseException;
 import com.zzyl.common.utils.DateUtils;
 import com.zzyl.common.utils.SecurityUtils;
+import com.zzyl.nursing.dto.AlertDataQueryDto;
 import com.zzyl.nursing.dto.AlertProcessResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class AlertDataServiceImpl extends ServiceImpl<AlertDataMapper, AlertData
      @return 报警数据
      */
     @Override
-    public List<AlertData> selectAlertDataList(AlertData alertData) {
+    public List<AlertData> selectAlertDataList(AlertDataQueryDto alertData) {
         return alertDataMapper.selectAlertDataList(alertData);
     }
 

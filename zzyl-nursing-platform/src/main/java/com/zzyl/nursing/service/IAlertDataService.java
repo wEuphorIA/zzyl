@@ -3,6 +3,7 @@ package com.zzyl.nursing.service;
 import java.util.List;
 import com.zzyl.nursing.domain.AlertData;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zzyl.nursing.dto.AlertDataQueryDto;
 import com.zzyl.nursing.dto.AlertProcessResultDTO;
 
 /**
@@ -27,7 +28,7 @@ public interface IAlertDataService extends IService<AlertData>
      * @param alertData 报警数据
      * @return 报警数据集合
      */
-    public List<AlertData> selectAlertDataList(AlertData alertData);
+    public List<AlertData> selectAlertDataList(AlertDataQueryDto alertData);
 
     /**
      * 新增报警数据

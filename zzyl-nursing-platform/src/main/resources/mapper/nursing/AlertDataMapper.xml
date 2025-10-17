@@ -39,25 +39,8 @@
     <select id="selectAlertDataList" parameterType="AlertData" resultMap="AlertDataResult">
         <include refid="selectAlertDataVo"/>
         <where>
-            <if test="iotId != null  and iotId != ''"> and iot_id = #{iotId}</if>
-            <if test="deviceName != null  and deviceName != ''"> and device_name like concat('%', #{deviceName}, '%')</if>
-            <if test="productKey != null  and productKey != ''"> and product_key = #{productKey}</if>
-            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
-            <if test="functionId != null  and functionId != ''"> and function_id = #{functionId}</if>
-            <if test="accessLocation != null  and accessLocation != ''"> and access_location = #{accessLocation}</if>
-            <if test="locationType != null "> and location_type = #{locationType}</if>
-            <if test="physicalLocationType != null "> and physical_location_type = #{physicalLocationType}</if>
-            <if test="deviceDescription != null  and deviceDescription != ''"> and device_description = #{deviceDescription}</if>
-            <if test="dataValue != null  and dataValue != ''"> and data_value = #{dataValue}</if>
-            <if test="alertRuleId != null "> and alert_rule_id = #{alertRuleId}</if>
-            <if test="alertReason != null  and alertReason != ''"> and alert_reason = #{alertReason}</if>
-            <if test="processingResult != null  and processingResult != ''"> and processing_result = #{processingResult}</if>
-            <if test="processorId != null "> and processor_id = #{processorId}</if>
-            <if test="processorName != null  and processorName != ''"> and processor_name like concat('%', #{processorName}, '%')</if>
-            <if test="processingTime != null "> and processing_time = #{processingTime}</if>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="deviceName != null  and deviceName != ''"> and device_name = #{deviceName}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
         </where>
     </select>
 
