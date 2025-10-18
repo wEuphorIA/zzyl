@@ -17,10 +17,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.zzyl.common.constant.CacheConstants;
+import com.zzyl.nursing.config.WebSocketServer;
 import com.zzyl.nursing.domain.AlertData;
 import com.zzyl.nursing.domain.DeviceData;
 import com.zzyl.nursing.mapper.DeviceMapper;
 import com.zzyl.nursing.service.IAlertDataService;
+import com.zzyl.nursing.vo.AlertNotifyVo;
 import com.zzyl.system.mapper.SysUserRoleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -60,6 +62,9 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
 
     @Resource
     private IAlertDataService alertDataService;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      查询报警规则
@@ -262,10 +267,31 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
         userIds = CollUtil.distinct(userIds);
 
         //保存报警数据
-        insertAlertData(userIds, rule, deviceData);
+        List<AlertData> alertDataList = insertAlertData(userIds, rule, deviceData);
+
+        // websocket推送消息
+        websocketNotity(alertDataList.get(0), rule, userIds);
     }
 
-    private void insertAlertData(List<Long> userIds, AlertRule rule, DeviceData deviceData) {
+    /**
+     * websocket推送消息
+     * @param alertData
+     * @param rule
+     * @param allUserIds
+     */
+    private void websocketNotity(AlertData alertData, AlertRule rule, Collection<Long> allUserIds) {
+
+        // 属性拷贝
+        AlertNotifyVo alertNotifyVo = BeanUtil.toBean(alertData, AlertNotifyVo.class);
+        alertNotifyVo.setFunctionName(rule.getFunctionName());
+        alertNotifyVo.setAlertDataType(rule.getAlertDataType());
+        alertNotifyVo.setNotifyType(1);
+        // 向指定的人推送消息
+        webSocketServer.sendMessageToConsumer(alertNotifyVo, allUserIds);
+
+    }
+
+    private List<AlertData> insertAlertData(List<Long> userIds, AlertRule rule, DeviceData deviceData) {
         List<AlertData> list = new ArrayList<>();
         userIds.forEach(userId -> {
             AlertData alertData = BeanUtil.toBean(deviceData, AlertData.class);
@@ -280,5 +306,6 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
         });
 
         alertDataService.saveBatch(list);
+        return list;
     }
 }

@@ -19,6 +19,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- amqp 1.0 qpid client -->
         <dependency>
             <groupId>org.apache.qpid</groupId>
