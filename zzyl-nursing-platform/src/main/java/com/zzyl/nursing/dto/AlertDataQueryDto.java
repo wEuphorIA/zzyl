@@ -36,4 +36,6 @@ public class AlertDataQueryDto {
 
     @ApiModelProperty(value = "状态，0：待处理，1：已处理", example = "0", allowableValues = "0,1")
     private Integer status;
+
+    private Long userId;
 }

@@ -42,6 +42,7 @@
             <if test="deviceName != null  and deviceName != ''"> and device_name = #{deviceName}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
             <if test="status != null">and status = #{status}</if>
+            <if test="userId != null">and user_id = #{userId}</if>
         </where>
     </select>
 

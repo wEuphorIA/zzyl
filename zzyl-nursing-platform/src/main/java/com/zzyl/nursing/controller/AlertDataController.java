@@ -47,9 +47,10 @@ public class AlertDataController extends BaseController
     public TableDataInfo<List<AlertData>> list(@ApiParam("报警数据查询条件") AlertDataQueryDto alertData)
     {
         startPage();
+        alertData.setUserId(SecurityUtils.getLoginUser().getUserId());
         List<AlertData> list = alertDataService.selectAlertDataList(alertData);
-        list = list.stream().filter(a -> a.getUserId().equals(SecurityUtils.getLoginUser().getUserId()))
-                .collect(Collectors.toList());
+        // list = list.stream().filter(a -> a.getUserId().equals(SecurityUtils.getLoginUser().getUserId()))
+        //         .collect(Collectors.toList());
         return getDataTable(list);
     }
 
