@@ -142,6 +142,7 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
     }
 
     @Override
+    @Transactional
     public LoginVo login(UserLoginRequestDto loginRequestDto) {
 
         //获取openid
@@ -161,11 +162,14 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
 
         familyMember.setPhone(phone);
         //注册用户
-        this.saveOrUpdate(familyMember);
 
-        String nickName = DEFAULT_NICKNAME_PREFIX.get((int) (Math.random() * DEFAULT_NICKNAME_PREFIX.size()))
-                + StringUtils.substring(familyMember.getPhone(), 7);
-        familyMember.setName(nickName);
+        if (familyMember.getName() == null){
+            String nickName = DEFAULT_NICKNAME_PREFIX.get((int) (Math.random() * DEFAULT_NICKNAME_PREFIX.size()))
+                    + StringUtils.substring(familyMember.getPhone(), 7);
+            familyMember.setName(nickName);
+        }
+
+        this.saveOrUpdate(familyMember);
 
         //返回jwt令牌
         Map<String, Object> claims = new HashMap<>();

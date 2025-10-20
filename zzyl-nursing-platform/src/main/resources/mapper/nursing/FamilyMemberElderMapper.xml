@@ -60,6 +60,7 @@
                 left join room r
                             on b.room_id = r.id
         where d.physical_location_type = -1
+        and fme.family_member_id = #{userId}
     </select>
 
     <insert id="insertFamilyMemberElder" parameterType="FamilyMemberElder" useGeneratedKeys="true" keyProperty="id">
