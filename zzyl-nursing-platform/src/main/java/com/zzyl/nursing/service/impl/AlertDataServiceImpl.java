@@ -104,6 +104,8 @@ public class AlertDataServiceImpl extends ServiceImpl<AlertDataMapper, AlertData
         List<AlertData> list = lambdaQuery().eq(AlertData::getIotId, alertData.getIotId())
                 .eq(AlertData::getFunctionId, alertData.getFunctionId())
                 .eq(AlertData::getAlertRuleId, alertData.getAlertRuleId())
+                .eq(AlertData::getStatus, 0)
+                .eq(AlertData::getCreateTime, alertData.getCreateTime())
                 .list();
 
         list.forEach(a -> {
